@@ -1,13 +1,13 @@
-import comands.OptionParserImpl;
-import comands.ICommand;
-import comands.QuitCommand;
+import comands.*;
+import comands.IConsoleParser;
+import comands.SimpleOptionParser;
 
 import java.util.Scanner;
 
 public class SimpleEditor {
 
     public static void main(String[] args) {
-        OptionParserImpl parser = new OptionParserImpl();
+        IConsoleParser parser = new SimpleOptionParser();
 
         try(Scanner scanner = new Scanner(System.in)){
             ICommand command = null;

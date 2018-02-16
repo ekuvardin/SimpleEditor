@@ -3,6 +3,6 @@ package comands;
 public class QuitCommand implements ICommand {
 
     public void execute() {
-        //May clear memory or release descriptors
+        System.out.println("The program will be terminated");
     }
 }

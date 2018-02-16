@@ -5,7 +5,7 @@ import joptsimple.*;
 
 import java.util.List;
 
-public class OptionParserImpl implements IConsoleParser {
+public class OptionParserImpl implements comands.IConsoleParser {
 
     private OptionParser parser;
     private OptionSpec<Integer> canvas;
@@ -43,14 +43,15 @@ public class OptionParserImpl implements IConsoleParser {
 
     @Override
     public ICommand parseCommand(String[] args) {
-        OptionSet set;
+        return new ErrorCommand("");
+        /*OptionSet set;
         try {
             set = parser.parse(args);
         } catch (OptionException e) {
             return new ErrorCommand(e);
         }
 
-        List<?> nonOptions = set.nonOptionArguments();
+        /*List<?> nonOptions = set.nonOptionArguments();
         if(nonOptions!=null && !nonOptions.isEmpty()){
             return new ErrorCommand("Not recognized options " + nonOptions.toString());
         }
@@ -65,6 +66,6 @@ public class OptionParserImpl implements IConsoleParser {
         else if(set.has(quit))
             return new QuitCommand();
         else
-            return new ErrorCommand(new RuntimeException("Unknown command. "));
+            return new ErrorCommand(new RuntimeException("Unknown command. "));*/
     }
 }
