@@ -1,6 +1,7 @@
 package canvas.Writers;
 
 import canvas.Canvas;
+import canvas.Viewer.ConsoleViewer;
 
 public class Writer {
 
@@ -38,6 +39,10 @@ public class Writer {
             // y - y1 = (x - x1)(y2-y1)/(x2 - x1)
             // y = y1 + (x - x1)(y2-y1)/(x2 - x1)
 
+            // (x - x1)/(x2 - x1) = (y - y1)/(y2-y1)
+            // (x - x1) = (y - y1)(x2 - x1)/(y2-y1)
+            // x = x1 + (y - y1)(x2 - x1)/(y2-y1)
+
             // try to draw line from left to write
             // To do this we should find min x coordinate
             int startx, starty, endx, endy;
@@ -59,7 +64,7 @@ public class Writer {
                 int newX = startx;
                 int newY = starty;
                 while (newX < endx && newY <= endy) {
-                    double newYcompare = findx(newX + 1, startx, starty, endx, endy);
+                    double newYcompare = findY(newX + 1, startx, starty, endx, endy);
 
                     if (newYcompare == newY + 1) {
                         newY++;
@@ -74,17 +79,39 @@ public class Writer {
                         array[newX - 1][newY - 1] = colour;
                     }
                 }
+            } else {
+                int newX = startx;
+                int newY = starty;
+                while (newX <= endx && newY > endy) {
+                    double newYcompare = findY(newX - 1, startx, starty, endx, endy);
+
+                    if (newYcompare == newY + 1) {
+                        newY--;
+                        newX++;
+                        array[newX - 2][newY - 1] = colour;
+                        array[newX - 1][newY - 1] = colour;
+                    } else if (newYcompare < newY - 1) {
+                        newX--;
+                        array[newX - 1][newY - 1] = colour;
+                    } else {
+                        newY--;
+                        array[newX - 1][newY - 1] = colour;
+                    }
+                    ConsoleViewer v = new ConsoleViewer();
+                    v.draw(canvas);
+                }
+
             }
         }
 
         return true;
     }
 
-    private static double findx(int x, int x1, int y1, int x2, int y2) {
-        return y1 + (x - x1) * (y2 - y1) / (x2 - x1);
+    private static double findY(int x, int x1, int y1, int x2, int y2) {
+        return y1 + (double)((x - x1) * (y2 - y1)) / (x2 - x1);
     }
 
-    private static int findxAccurately(int x, int x1, int y1, int x2, int y2) {
-        return y1 + (x - x1) * (y2 - y1) / (x2 - x1);
+    private static double findX(int y, int x1, int y1, int x2, int y2) {
+        return x1 + (double)((y - y1)*(x2 - x1))/(y2-y1);
     }
 }

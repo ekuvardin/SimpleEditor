@@ -30,6 +30,9 @@ public class SimpleOptionParser implements comands.IConsoleParser {
         if(args.length>4)
             return new ErrorCommand("Unknown options after B command " + Arrays.toString(Arrays.copyOfRange(args, 4, args.length)));
 
+        if(args.length<4)
+            return new ErrorCommand("Not enough args for B command");
+
         int x,y;
         char colour;
         try{
@@ -53,6 +56,9 @@ public class SimpleOptionParser implements comands.IConsoleParser {
         if(args.length>3)
             return new ErrorCommand("Unknown options after C command " + Arrays.toString(Arrays.copyOfRange(args, 3, args.length)));
 
+        if(args.length<3)
+            return new ErrorCommand("Not enough args for C command");
+
         int w,h;
         try{
             w = Integer.parseInt(args[1]);
@@ -72,6 +78,9 @@ public class SimpleOptionParser implements comands.IConsoleParser {
         if(args.length>5)
             return new ErrorCommand("Unknown options after L command " + Arrays.toString(Arrays.copyOfRange(args, 5, args.length)));
 
+        if(args.length<5)
+            return new ErrorCommand("Not enough args for L command");
+
         int x1,y1,x2,y2;
         try{
             x1 = Integer.parseInt(args[1]);
@@ -88,6 +97,9 @@ public class SimpleOptionParser implements comands.IConsoleParser {
     private ICommand parseR(String[] args){
         if(args.length>5)
             return new ErrorCommand("Unknown options after R command " + Arrays.toString(Arrays.copyOfRange(args, 5, args.length)));
+
+        if(args.length<5)
+            return new ErrorCommand("Not enough args for R command");
 
         int x1,y1,x2,y2;
         try{
