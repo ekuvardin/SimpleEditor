@@ -78,24 +78,28 @@ public class Writer {
                         newY++;
                         array[newX - 1][newY - 1] = colour;
                     }
+                    ConsoleViewer v = new ConsoleViewer();
+                    v.draw(canvas);
                 }
             } else {
                 int newX = startx;
                 int newY = starty;
                 while (newX <= endx && newY > endy) {
-                    double newYcompare = findY(newX - 1, startx, starty, endx, endy);
+                    double newXcompare = findX(newY - 1, startx, starty, endx, endy);
 
-                    if (newYcompare == newY + 1) {
+                    if (newXcompare == newX + 1) {
                         newY--;
                         newX++;
-                        array[newX - 2][newY - 1] = colour;
                         array[newX - 1][newY - 1] = colour;
-                    } else if (newYcompare < newY - 1) {
-                        newX--;
-                        array[newX - 1][newY - 1] = colour;
-                    } else {
+                     //   array[newX - 2][newY - 1] = colour;
+                        array[newX - 1][newY] = colour;
+                    } else if (newXcompare < newX + 1) {
                         newY--;
                         array[newX - 1][newY - 1] = colour;
+                    } else {
+                        newX++;
+                        array[newX - 1][newY - 1] = colour;
+
                     }
                     ConsoleViewer v = new ConsoleViewer();
                     v.draw(canvas);
