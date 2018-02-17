@@ -1,8 +1,10 @@
-package comands;
+package parser;
+
+import comands.*;
 
 import java.util.Arrays;
 
-public class SimpleOptionParser implements comands.IConsoleParser {
+public class SimpleOptionParser implements IConsoleParser {
 
     @Override
     public ICommand parseCommand(String[] args) {
@@ -46,6 +48,9 @@ public class SimpleOptionParser implements comands.IConsoleParser {
             return new ErrorCommand("X,Y coordinates should be positive");
         }
 
+        if(args[3].length() >1 || args[3].charAt(0)<97 && args[3].charAt(0)>122){
+            return new ErrorCommand(String.format("Unknow colour %s, colour must be in range 'a', ... ,'z'", args[3]));
+        }
         colour = args[3].charAt(0);
 
 

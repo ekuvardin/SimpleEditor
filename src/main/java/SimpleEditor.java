@@ -1,6 +1,6 @@
 import comands.*;
-import comands.IConsoleParser;
-import comands.SimpleOptionParser;
+import parser.IConsoleParser;
+import parser.SimpleOptionParser;
 
 import java.util.Scanner;
 

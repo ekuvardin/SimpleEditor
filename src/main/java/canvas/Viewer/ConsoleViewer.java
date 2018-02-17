@@ -7,9 +7,8 @@ public class ConsoleViewer implements IView {
     @Override
     public void draw(Canvas canvas) {
         char[][] array = canvas.getArray();
-        int xLength = array.length;
-        // TODO check array[0]!=null
-        int yLength = array[0].length;
+        int xLength = canvas.getxLength();
+        int yLength = canvas.getyLength();
         for(int i = 0; i<array.length + 2; i++){
             System.out.print("-");
         }

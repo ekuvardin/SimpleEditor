@@ -1,11 +1,11 @@
-package comands;
+package parser;
 
 
+import comands.ErrorCommand;
+import comands.ICommand;
 import joptsimple.*;
 
-import java.util.List;
-
-public class OptionParserImpl implements comands.IConsoleParser {
+public class OptionParserImpl implements IConsoleParser {
 
     private OptionParser parser;
     private OptionSpec<Integer> canvas;
