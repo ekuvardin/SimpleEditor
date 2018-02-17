@@ -1,38 +1,22 @@
 package canvas;
 
-import java.util.Arrays;
+public abstract class Canvas {
 
-public class Canvas {
-
-    private char[][] array;
-    private final int xLength;
-    private final int yLength;
-    private static Canvas currentCanvas;
-
-    public static Canvas getCurrentCanvas(){
-        return currentCanvas;
-    }
-
-    public Canvas(int x, int y){
-        this.array = new char[x][y];
-        for(int i = 0; i< x; i++){
-            Arrays.fill(array[i], ' ');
-        }
-
-        xLength = x;
-        yLength = y;
+    protected Canvas() {
         currentCanvas = this;
     }
 
-    public char[][] getArray() {
-        return array;
-    }
+    public abstract void set(int x, int y, char value);
 
-    public int getxLength() {
-        return xLength;
-    }
+    public abstract char get(int x, int y);
 
-    public int getyLength() {
-        return yLength;
+    public abstract int getxLength();
+
+    public abstract int getyLength();
+
+    private static Canvas currentCanvas;
+
+    public final static Canvas getCurrentCanvas() {
+        return currentCanvas;
     }
 }

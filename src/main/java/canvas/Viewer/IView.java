@@ -1,8 +1,7 @@
 package canvas.Viewer;
 
 import canvas.Canvas;
-
-import java.util.concurrent.Executor;
+import canvas.SimpleCanvas;
 
 public interface IView {
 

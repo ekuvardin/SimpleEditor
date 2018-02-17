@@ -1,6 +1,6 @@
 package comands;
 
-import canvas.Canvas;
+import canvas.SimpleCanvas;
 import canvas.Viewer.IView;
 import canvas.Writers.FillArea.SingleThreadFill;
 
@@ -19,8 +19,8 @@ public class FillAreaCommand implements ICommand {
     @Override
     public void execute(IView view) {
         SingleThreadFill f = new SingleThreadFill();
-        f.fill(Canvas.getCurrentCanvas(), x, y, colour, 1);
+        f.fill(SimpleCanvas.getCurrentCanvas(), x, y, colour, 1);
 
-        view.draw(Canvas.getCurrentCanvas());
+        view.draw(SimpleCanvas.getCurrentCanvas());
     }
 }

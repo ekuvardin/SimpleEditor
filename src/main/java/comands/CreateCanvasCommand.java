@@ -1,7 +1,6 @@
 package comands;
 
-import canvas.Canvas;
-import canvas.Viewer.ConsoleViewer;
+import canvas.SimpleCanvas;
 import canvas.Viewer.IView;
 
 public class CreateCanvasCommand implements ICommand {
@@ -16,7 +15,7 @@ public class CreateCanvasCommand implements ICommand {
 
     @Override
     public void execute(IView view) {
-        Canvas canvas = new Canvas(this.weight, this.height);
-        view.draw(canvas);
+        SimpleCanvas simpleCanvas = new SimpleCanvas(this.weight, this.height);
+        view.draw(simpleCanvas);
     }
 }

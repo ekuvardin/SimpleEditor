@@ -14,7 +14,7 @@ public class OptionParserImpl implements IConsoleParser {
     private OptionSpec<String> fill;
     private OptionSpecBuilder quit;
 
-    public OptionParserImpl(){
+    public OptionParserImpl() {
         this.parser = new OptionParser("Q");
         OptionSpecBuilder canvasBuilder = this.parser.accepts("C", "Create canvas");
 
@@ -29,11 +29,12 @@ public class OptionParserImpl implements IConsoleParser {
         this.canvas = canvasBuilder.requiredUnless("B", "L", "R", "Q")
                 .withRequiredArg().ofType(Integer.class).describedAs("C").withValuesSeparatedBy(" ");
 
-        this.line= lineBuilder.requiredUnless("C", "B", "R", "Q")
+        this.line = lineBuilder.requiredUnless("C", "B", "R", "Q")
                 .withRequiredArg().ofType(Integer.class).describedAs("L").withValuesSeparatedBy(" ");
 
         this.rectangle = rectangleBuilder.requiredUnless("C", "L", "B", "Q")
-                .withRequiredArg().ofType(Integer.class).describedAs("R").withValuesSeparatedBy(" ");;
+                .withRequiredArg().ofType(Integer.class).describedAs("R").withValuesSeparatedBy(" ");
+        ;
 
         this.fill = fillBuilder.requiredUnless("C", "L", "R", "Q")
                 .withRequiredArg().describedAs("B").withValuesSeparatedBy(" ");

@@ -6,11 +6,11 @@ public class ErrorCommand implements ICommand {
 
     private String message;
 
-    public ErrorCommand(Exception exception){
+    public ErrorCommand(Exception exception) {
         this.message = exception.getMessage();
     }
 
-    public ErrorCommand(String message){
+    public ErrorCommand(String message) {
         this.message = message;
     }
 

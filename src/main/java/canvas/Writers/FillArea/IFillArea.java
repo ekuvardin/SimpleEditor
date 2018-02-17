@@ -1,6 +1,7 @@
 package canvas.Writers.FillArea;
 
 import canvas.Canvas;
+import canvas.SimpleCanvas;
 
 public interface IFillArea {
 

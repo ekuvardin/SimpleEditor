@@ -1,15 +1,16 @@
 package canvas.Writers.FillArea;
 
-import canvas.Canvas;
+import canvas.SimpleCanvas;
 
-import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.concurrent.ArrayBlockingQueue;
 
-public class ConcurrentFillArea implements IFillArea{
+public class ConcurrentFillArea{}/* implements IFillArea {
 
     @Override
-    public void fill(Canvas canvas, int x, int y, char colour, int threadCount) {
-        char[][] array = canvas.getArray();
+    public void fill(SimpleCanvas simpleCanvas, int x, int y, char colour, int threadCount) {
+        char[][] array = Collections.synchronizedCollection(simpleCanvas.getArray());
         char sourceColour = array[x - 1][y - 1];
 
         // Nothing to do here
@@ -17,13 +18,14 @@ public class ConcurrentFillArea implements IFillArea{
             return;
         }
 
-        int xLength = canvas.getxLength();
-        int yLength = canvas.getyLength();
+        int xLength = simpleCanvas.getxLength();
+        int yLength = simpleCanvas.getyLength();
 
-        ArrayList<SingleThreadFill.Entry> needToBeChecked = new ArrayList<>(xLength);
+        IWaitStrategy strategy = new ThreadInterruptedStrategy();
+        ArrayBlockingQueue<Entry> needToBeChecked = new ArrayBlockingQueue<>(1024);
 
         // first iteration
-        SingleThreadFill.Entry entryFirst = new SingleThreadFill.Entry(x, y);
+        Entry entryFirst = new Entry(x, y);
         checkHorizontal(entryFirst, xLength, sourceColour, array, needToBeChecked, colour);
         checkVertical(entryFirst, yLength, sourceColour, array, needToBeChecked, colour);
         array[x - 1][y - 1] = colour;
@@ -63,63 +65,4 @@ public class ConcurrentFillArea implements IFillArea{
         }
     }
 
-    private enum TypeOfFilling {
-        AllDirections,
-        HorizontalOnly,
-        VerticalOnly
-    }
-
-    private static class Entry implements Comparable<SingleThreadFill.Entry> {
-        int x;
-        int y;
-
-        SingleThreadFill.TypeOfFilling typeOfFilling;   // -1 horizont, 0 -all directions, 1- vertical
-
-        Entry(int x, int y) {
-            this.x = x;
-            this.y = y;
-            typeOfFilling = SingleThreadFill.TypeOfFilling.AllDirections;
-        }
-
-        Entry(int x, int y, SingleThreadFill.TypeOfFilling typeOfFilling) {
-            this.x = x;
-            this.y = y;
-            this.typeOfFilling = typeOfFilling;
-        }
-
-        @Override
-        public int compareTo(SingleThreadFill.Entry o) {
-            if (this == o) return 0;
-
-            if (this.x < o.x)
-                return -1;
-            if (this.x > o.x)
-                return 1;
-
-            if (this.y < o.y)
-                return -1;
-            if (this.y > o.y)
-                return 1;
-
-            return 0;
-        }
-
-        @Override
-        public boolean equals(Object o) {
-            if (this == o) return true;
-            if (o == null || getClass() != o.getClass()) return false;
-
-            SingleThreadFill.Entry entry = (SingleThreadFill.Entry) o;
-
-            if (x != entry.x) return false;
-            return y == entry.y;
-        }
-
-        @Override
-        public int hashCode() {
-            int result = x;
-            result = 31 * result + y;
-            return result;
-        }
-    }
-}
+}*/

@@ -1,17 +1,17 @@
 package canvas.Writers;
 
 import canvas.Canvas;
+import canvas.SimpleCanvas;
 import canvas.Viewer.ConsoleViewer;
 
 public class Writer {
 
     public static boolean writeRectangle(Canvas canvas, int x1, int y1, int x2, int y2, char colour) {
-        char[][] array = canvas.getArray();
         int xLength = canvas.getxLength();
         int yLength = canvas.getyLength();
 
         if (x1 > xLength || x2 > xLength || y1 > yLength || y2 > yLength) {
-            System.out.println(String.format("Couldn't create rectangle inside current canvas width: %d, height: %d", xLength, yLength));
+            System.out.println(String.format("Couldn't create rectangle inside current simpleCanvas width: %d, height: %d", xLength, yLength));
             return false;
         }
 
@@ -19,12 +19,11 @@ public class Writer {
     }
 
     public static boolean writeLine(Canvas canvas, int x1, int y1, int x2, int y2, char colour) {
-        char[][] array = canvas.getArray();
         int xLength = canvas.getxLength();
         int yLength = canvas.getyLength();
 
         if (x1 > xLength || x2 > xLength || y1 > yLength || y2 > yLength) {
-            System.out.println(String.format("Couldn't create line inside current canvas width: %d, height: %d", xLength, yLength));
+            System.out.println(String.format("Couldn't create line inside current simpleCanvas width: %d, height: %d", xLength, yLength));
             return false;
         }
 
@@ -32,7 +31,7 @@ public class Writer {
         if (x1 == x2 || y1 == y2) {
             for (int i = Math.min(x1, x2); i <= Math.max(x1, x2); i++)
                 for (int j = Math.min(y1, y2); j <= Math.max(y1, y2); j++)
-                    array[i - 1][j - 1] = colour;
+                    canvas.set(i, j, colour);
         } else {
             // Find line equation of the line
             // (y - y1)/(y2-y1) = (x - x1)/(x2 - x1)
@@ -57,8 +56,9 @@ public class Writer {
                 endx = x1;
                 endy = y1;
             }
-            array[startx - 1][starty - 1] = colour;
-            array[endx - 1][endy - 1] = colour;
+
+            canvas.set(startx, starty, colour);
+            canvas.set(endx, endy, colour);
 
             if (y1 < y2) {
                 int newX = startx;
@@ -69,14 +69,14 @@ public class Writer {
                     if (newYcompare == newY + 1) {
                         newY++;
                         newX++;
-                        array[newX - 1][newY - 1] = colour;
-                        array[newX - 1][newY - 2] = colour;
+                        canvas.set(newX, newY, colour);
+                        canvas.set(newX, newY - 1, colour);
                     } else if (newYcompare < newY + 1) {
                         newX++;
-                        array[newX - 1][newY - 1] = colour;
+                        canvas.set(newX, newY, colour);
                     } else {
                         newY++;
-                        array[newX - 1][newY - 1] = colour;
+                        canvas.set(newX, newY, colour);
                     }
                     ConsoleViewer v = new ConsoleViewer();
                     v.draw(canvas);
@@ -90,21 +90,20 @@ public class Writer {
                     if (newXcompare == newX + 1) {
                         newY--;
                         newX++;
-                        array[newX - 1][newY - 1] = colour;
-                     //   array[newX - 2][newY - 1] = colour;
-                        array[newX - 1][newY] = colour;
+                        canvas.set(newX, newY, colour);
+                        //   array[newX - 2][newY - 1] = colour;
+                        canvas.set(newX, newY + 1, colour);
                     } else if (newXcompare < newX + 1) {
                         newY--;
-                        array[newX - 1][newY - 1] = colour;
+                        canvas.set(newX, newY, colour);
                     } else {
                         newX++;
-                        array[newX - 1][newY - 1] = colour;
+                        canvas.set(newX, newY, colour);
 
                     }
                     ConsoleViewer v = new ConsoleViewer();
                     v.draw(canvas);
                 }
-
             }
         }
 
@@ -112,10 +111,10 @@ public class Writer {
     }
 
     private static double findY(int x, int x1, int y1, int x2, int y2) {
-        return y1 + (double)((x - x1) * (y2 - y1)) / (x2 - x1);
+        return y1 + (double) ((x - x1) * (y2 - y1)) / (x2 - x1);
     }
 
     private static double findX(int y, int x1, int y1, int x2, int y2) {
-        return x1 + (double)((y - y1)*(x2 - x1))/(y2-y1);
+        return x1 + (double) ((y - y1) * (x2 - x1)) / (y2 - y1);
     }
 }
