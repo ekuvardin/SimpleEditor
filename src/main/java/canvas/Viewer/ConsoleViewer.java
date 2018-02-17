@@ -2,6 +2,8 @@ package canvas.Viewer;
 
 import canvas.Canvas;
 
+import java.util.Arrays;
+
 public class ConsoleViewer implements IView {
 
     @Override
@@ -30,5 +32,22 @@ public class ConsoleViewer implements IView {
             System.out.print("-");
         }
         System.out.println();
+    }
+
+    @Override
+    public void showError(Exception e) {
+        System.err.println("ERROR: " + Arrays.toString(e.getStackTrace()));
+        System.err.println();
+    }
+
+    @Override
+    public void showError(String message) {
+        System.err.println("ERROR: " + message);
+        System.err.println();
+    }
+
+    @Override
+    public void printMessage(String message) {
+        System.out.println(message);
     }
 }

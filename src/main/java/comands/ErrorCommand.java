@@ -1,5 +1,7 @@
 package comands;
 
+import canvas.Viewer.IView;
+
 public class ErrorCommand implements ICommand {
 
     private String message;
@@ -13,8 +15,7 @@ public class ErrorCommand implements ICommand {
     }
 
     @Override
-    public void execute() {
-        System.err.println("ERROR: " + message);
-        System.err.println();
+    public void execute(IView view) {
+        view.showError(message);
     }
 }

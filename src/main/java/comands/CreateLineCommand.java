@@ -2,6 +2,7 @@ package comands;
 
 import canvas.Canvas;
 import canvas.Viewer.ConsoleViewer;
+import canvas.Viewer.IView;
 import canvas.Writers.Writer;
 
 public class CreateLineCommand implements ICommand{
@@ -17,7 +18,7 @@ public class CreateLineCommand implements ICommand{
     }
 
     @Override
-    public void execute() {
+    public void execute(IView view) {
         Canvas canvas = Canvas.getCurrentCanvas();
         if(canvas == null){
             System.out.println("Please, create canvas first. For example: C 20 4");
@@ -25,7 +26,6 @@ public class CreateLineCommand implements ICommand{
         }
 
         Writer.writeLine(canvas, x1, y1, x2, y2, colour);
-        ConsoleViewer consoleViewer = new ConsoleViewer();
-        consoleViewer.draw(canvas);
+        view.draw(canvas);
     }
 }
