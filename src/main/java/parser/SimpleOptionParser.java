@@ -22,6 +22,10 @@ public class SimpleOptionParser implements IConsoleParser {
                 return parseL(args);
             case "R":
                 return parseR(args);
+            case "CN":
+                return parseCN(args);
+            case "BN":
+                return parseBN(args);
         }
 
         return new ErrorCommand("Unknown command " + args[0]);
@@ -62,6 +66,41 @@ public class SimpleOptionParser implements IConsoleParser {
         return new FillAreaCommand(x, y, colour);
     }
 
+    private ICommand parseBN(String[] args) {
+        if (args.length > 5)
+            return new ErrorCommand("Unknown options after BN command " + Arrays.toString(Arrays.copyOfRange(args, 4, args.length)));
+
+        if (args.length < 5)
+            return new ErrorCommand("Not enough args for BN command");
+
+        int x, y;
+        char colour;
+        try {
+            x = Integer.parseInt(args[1]);
+            y = Integer.parseInt(args[2]);
+        } catch (NumberFormatException e) {
+            return new ErrorCommand("X,Y coordinates should be integer");
+        }
+
+        if (x <= 0 || y <= 0) {
+            return new ErrorCommand("X,Y coordinates should be positive");
+        }
+
+        if (args[3].length() > 1 || args[3].charAt(0) < 97 && args[3].charAt(0) > 122) {
+            return new ErrorCommand(String.format("Unknow colour %s, colour must be in range 'a', ... ,'z'", args[3]));
+        }
+        colour = args[3].charAt(0);
+
+        int threadCount;
+        try {
+            threadCount = Integer.parseInt(args[4]);
+        } catch (NumberFormatException e) {
+            return new ErrorCommand("Thread count should be integer");
+        }
+
+        return new FillConcurrentAreaCommand(x, y, colour, threadCount);
+    }
+
     private ICommand parseC(String[] args) {
         if (args.length > 3)
             return new ErrorCommand("Unknown options after C command " + Arrays.toString(Arrays.copyOfRange(args, 3, args.length)));
@@ -82,6 +121,28 @@ public class SimpleOptionParser implements IConsoleParser {
         }
 
         return new CreateCanvasCommand(w, h);
+    }
+
+    private ICommand parseCN(String[] args) {
+        if (args.length > 3)
+            return new ErrorCommand("Unknown options after CN command " + Arrays.toString(Arrays.copyOfRange(args, 3, args.length)));
+
+        if (args.length < 3)
+            return new ErrorCommand("Not enough args for CN command");
+
+        int w, h;
+        try {
+            w = Integer.parseInt(args[1]);
+            h = Integer.parseInt(args[2]);
+        } catch (NumberFormatException e) {
+            return new ErrorCommand("w,h coordinates should be integer");
+        }
+
+        if (w <= 0 || h <= 0) {
+            return new ErrorCommand("X,Y coordinates should be positive");
+        }
+
+        return new CreateConcurrentCanvasCommand(w, h);
     }
 
     private ICommand parseL(String[] args) {

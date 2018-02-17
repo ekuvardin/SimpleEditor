@@ -37,4 +37,9 @@ public class SimpleCanvas extends Canvas {
     public int getyLength() {
         return yLength;
     }
+
+    @Override
+    public boolean canBeParallelUsed() {
+        return false;
+    }
 }

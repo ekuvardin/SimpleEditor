@@ -1,14 +1,15 @@
 package comands;
 
+import canvas.Canvas;
 import canvas.SimpleCanvas;
 import canvas.Viewer.IView;
 import canvas.Writers.FillArea.SingleThreadFill;
 
 public class FillAreaCommand implements ICommand {
 
-    private int x;
-    private int y;
-    private char colour;
+    protected int x;
+    protected int y;
+    protected char colour;
 
     public FillAreaCommand(int x, int y, char colour) {
         this.x = x;
@@ -19,8 +20,8 @@ public class FillAreaCommand implements ICommand {
     @Override
     public void execute(IView view) {
         SingleThreadFill f = new SingleThreadFill();
-        f.fill(SimpleCanvas.getCurrentCanvas(), x, y, colour, 1);
+        f.fill(Canvas.getCurrentCanvas(), x, y, colour, 1);
 
-        view.draw(SimpleCanvas.getCurrentCanvas());
+        view.draw(Canvas.getCurrentCanvas());
     }
 }

@@ -5,8 +5,8 @@ import canvas.Viewer.IView;
 
 public class CreateCanvasCommand implements ICommand {
 
-    private int weight;
-    private int height;
+    protected int weight;
+    protected int height;
 
     public CreateCanvasCommand(int weight, int height) {
         this.weight = weight;

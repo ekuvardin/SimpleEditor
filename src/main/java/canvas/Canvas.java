@@ -19,4 +19,6 @@ public abstract class Canvas {
     public final static Canvas getCurrentCanvas() {
         return currentCanvas;
     }
+
+    public abstract boolean canBeParallelUsed();
 }

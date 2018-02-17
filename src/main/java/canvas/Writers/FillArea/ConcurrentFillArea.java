@@ -1,68 +1,103 @@
 package canvas.Writers.FillArea;
 
-import canvas.SimpleCanvas;
+import canvas.Canvas;
+import canvas.Writers.FillArea.StopStrategy.WaitingChain;
+import canvas.Writers.FillArea.WaitStrategy.IWaitStrategy;
+import canvas.Writers.FillArea.WaitStrategy.ThreadStopStrategy;
 
-import java.util.Collections;
-import java.util.List;
-import java.util.concurrent.ArrayBlockingQueue;
+import java.util.concurrent.*;
 
-public class ConcurrentFillArea{}/* implements IFillArea {
+public class ConcurrentFillArea implements IFillArea {
 
     @Override
-    public void fill(SimpleCanvas simpleCanvas, int x, int y, char colour, int threadCount) {
-        char[][] array = Collections.synchronizedCollection(simpleCanvas.getArray());
-        char sourceColour = array[x - 1][y - 1];
+    public void fill(Canvas canvas, int x, int y, char colour, int threadCount) {
+        char sourceColour = canvas.get(x, y);
 
         // Nothing to do here
         if (sourceColour == colour) {
             return;
         }
 
-        int xLength = simpleCanvas.getxLength();
-        int yLength = simpleCanvas.getyLength();
+        int xLength = canvas.getxLength();
+        int yLength = canvas.getyLength();
 
-        IWaitStrategy strategy = new ThreadInterruptedStrategy();
-        ArrayBlockingQueue<Entry> needToBeChecked = new ArrayBlockingQueue<>(1024);
+        ArrayBlockingQueue<CoordinatesEntry> needToBeChecked = new ArrayBlockingQueue<>(yLength * xLength);
 
         // first iteration
-        Entry entryFirst = new Entry(x, y);
-        checkHorizontal(entryFirst, xLength, sourceColour, array, needToBeChecked, colour);
-        checkVertical(entryFirst, yLength, sourceColour, array, needToBeChecked, colour);
-        array[x - 1][y - 1] = colour;
+        //CoordinatesEntry entryFirst = new CoordinatesEntry(x, y);
+      //  checkHorizontal(entryFirst, xLength, sourceColour, canvas, needToBeChecked, colour);
+      //  checkVertical(entryFirst, yLength, sourceColour, canvas, needToBeChecked, colour);
+        canvas.set(x, y, colour);
+        needToBeChecked.add(new CoordinatesEntry(x, y));
 
-        while (!needToBeChecked.isEmpty()) {
-            SingleThreadFill.Entry entry = needToBeChecked.remove(needToBeChecked.size() - 1);
+        final IWaitStrategy strategy = new ThreadStopStrategy();
+        final WaitingChain chain = new WaitingChain(threadCount);
+        final ExecutorService executor = Executors.newFixedThreadPool(threadCount);
 
-            if (entry.typeOfFilling == SingleThreadFill.TypeOfFilling.HorizontalOnly) {
-                checkVertical(entry, yLength, sourceColour, array, needToBeChecked, colour);
-            } else {
-                checkHorizontal(entry, xLength, sourceColour, array, needToBeChecked, colour);
+        CompletableFuture[] futures = new CompletableFuture[threadCount];
+        for (int i = 0; i < threadCount; i++) {
+            futures[i] = CompletableFuture.supplyAsync(() -> {
+                try {
+                    while (strategy.canRun()) {
+                        CoordinatesEntry coordinatesEntry = needToBeChecked.poll();
+
+                        if (coordinatesEntry != null) {
+                            chain.enter();
+                            if (coordinatesEntry.typeOfFilling == TypeOfFilling.HorizontalOnly) {
+                                checkVertical(coordinatesEntry, yLength, sourceColour, canvas, needToBeChecked, colour);
+                            } else  if (coordinatesEntry.typeOfFilling == TypeOfFilling.VerticalOnly) {
+                                checkHorizontal(coordinatesEntry, xLength, sourceColour, canvas, needToBeChecked, colour);
+                            } else {
+                                checkHorizontal(coordinatesEntry, xLength, sourceColour, canvas, needToBeChecked, colour);
+                                checkVertical(coordinatesEntry, yLength, sourceColour, canvas, needToBeChecked, colour);
+                            }
+                        } else {
+                            chain.exit();
+
+                            if(chain.isLimitSucceed())
+                                strategy.stop();
+                            else
+                                strategy.trySpinWait();
+                        }
+                    }
+                    return null;
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                    throw new RuntimeException(e);
+                }
+            }, executor);
+        }
+
+        try {
+            if(!executor.awaitTermination(60, TimeUnit.SECONDS)){
+                System.err.println("Cann't execute within timeout");
             }
+        } catch (InterruptedException e) {
+            e.printStackTrace();
         }
     }
 
-    private void checkHorizontal(SingleThreadFill.Entry entry, int xLength, char sourceColour, char[][] array, List<SingleThreadFill.Entry> needToBeChecked, char colour) {
-        for (int i = entry.x + 1; i <= xLength && array[i - 1][entry.y - 1] == sourceColour; i++) {
-            array[i - 1][entry.y - 1] = colour;
-            needToBeChecked.add(new SingleThreadFill.Entry(i, entry.y, SingleThreadFill.TypeOfFilling.HorizontalOnly));
+    private void checkHorizontal(CoordinatesEntry coordinatesEntry, int xLength, char sourceColour, Canvas canvas, ArrayBlockingQueue<CoordinatesEntry> needToBeChecked, char colour) {
+        for (int i = coordinatesEntry.x + 1; i <= xLength && canvas.get(i, coordinatesEntry.y) == sourceColour; i++) {
+            canvas.set(i, coordinatesEntry.y, colour);
+            needToBeChecked.add(new CoordinatesEntry(i, coordinatesEntry.y, TypeOfFilling.HorizontalOnly));
         }
 
-        for (int i = entry.x - 1; i > 0 && array[i - 1][entry.y - 1] == sourceColour; i--) {
-            array[i - 1][entry.y - 1] = colour;
-            needToBeChecked.add(new SingleThreadFill.Entry(i, entry.y, SingleThreadFill.TypeOfFilling.HorizontalOnly));
-        }
-    }
-
-    private void checkVertical(SingleThreadFill.Entry entry, int yLength, char sourceColour, char[][] array, List<SingleThreadFill.Entry> needToBeChecked, char colour) {
-        for (int j = entry.y + 1; j <= yLength && array[entry.x - 1][j - 1] == sourceColour; j++) {
-            array[entry.x - 1][j - 1] = colour;
-            needToBeChecked.add(new SingleThreadFill.Entry(entry.x, j, SingleThreadFill.TypeOfFilling.VerticalOnly));
-        }
-
-        for (int j = entry.y - 1; j > 0 && array[entry.x - 1][j - 1] == sourceColour; j--) {
-            array[entry.x - 1][j - 1] = colour;
-            needToBeChecked.add(new SingleThreadFill.Entry(entry.x, j, SingleThreadFill.TypeOfFilling.VerticalOnly));
+        for (int i = coordinatesEntry.x - 1; i > 0 && canvas.get(i, coordinatesEntry.y) == sourceColour; i--) {
+            canvas.set(i, coordinatesEntry.y, colour);
+            needToBeChecked.add(new CoordinatesEntry(i, coordinatesEntry.y, TypeOfFilling.HorizontalOnly));
         }
     }
 
-}*/
+    private void checkVertical(CoordinatesEntry coordinatesEntry, int yLength, char sourceColour, Canvas canvas, ArrayBlockingQueue<CoordinatesEntry> needToBeChecked, char colour) {
+        for (int j = coordinatesEntry.y + 1; j <= yLength && canvas.get(coordinatesEntry.x, j) == sourceColour; j++) {
+            canvas.set(coordinatesEntry.x, j, colour);
+            needToBeChecked.add(new CoordinatesEntry(coordinatesEntry.x, j, TypeOfFilling.VerticalOnly));
+        }
+
+        for (int j = coordinatesEntry.y - 1; j > 0 && canvas.get(coordinatesEntry.x, j) == sourceColour; j--) {
+            canvas.set(coordinatesEntry.x, j, colour);
+            needToBeChecked.add(new CoordinatesEntry(coordinatesEntry.x, j, TypeOfFilling.VerticalOnly));
+        }
+    }
+}

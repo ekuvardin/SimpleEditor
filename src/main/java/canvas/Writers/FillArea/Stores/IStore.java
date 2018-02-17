@@ -1,4 +1,4 @@
-package canvas.Writers.FillArea;
+package canvas.Writers.FillArea.Stores;
 
 public interface IStore<T> {
 
