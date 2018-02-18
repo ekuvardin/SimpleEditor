@@ -2,7 +2,7 @@ package comands;
 
 import canvas.Canvas;
 import canvas.Viewer.IView;
-import canvas.Writers.FillArea.SingleThreadFillArea;
+import canvas.Figures.FillArea.SingleThreadFillArea;
 
 public class FillAreaCommand implements ICommand {
 

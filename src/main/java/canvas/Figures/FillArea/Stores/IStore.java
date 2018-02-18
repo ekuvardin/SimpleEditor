@@ -1,16 +1,16 @@
-package canvas.Writers.FillArea.Stores;
+package canvas.Figures.FillArea.Stores;
 
 public interface IStore<T> {
 
     /**
-     * Get item
+     * Get item until interrupted
      *
      * @return item
      */
     T get() throws InterruptedException;
 
     /**
-     * Put item
+     * Put item until interrupted
      *
      * @param item putted item
      */

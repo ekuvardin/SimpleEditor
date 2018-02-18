@@ -2,7 +2,7 @@ package comands;
 
 import canvas.Canvas;
 import canvas.Viewer.IView;
-import canvas.Writers.Lines.WriteLines;
+import canvas.Figures.Lines.WriteLines;
 
 public class CreateLineCommand implements ICommand {
 

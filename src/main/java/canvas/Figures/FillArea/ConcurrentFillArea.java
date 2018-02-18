@@ -1,9 +1,9 @@
-package canvas.Writers.FillArea;
+package canvas.Figures.FillArea;
 
 import canvas.Canvas;
-import canvas.Writers.FillArea.StopStrategy.WaitingChain;
-import canvas.Writers.FillArea.WaitStrategy.IWaitStrategy;
-import canvas.Writers.FillArea.WaitStrategy.ThreadStopStrategy;
+import canvas.Figures.FillArea.StopStrategy.WaitingChain;
+import canvas.Figures.FillArea.WaitStrategy.IWaitStrategy;
+import canvas.Figures.FillArea.WaitStrategy.ThreadStopStrategy;
 
 import java.util.concurrent.*;
 
@@ -28,7 +28,7 @@ public class ConcurrentFillArea implements IFillArea {
         needToBeChecked.add(new CoordinatesEntry(x, y));
 
         final IWaitStrategy strategy = new ThreadStopStrategy();
-        final WaitingChain chain = new WaitingChain(threadCount);
+        final WaitingChain chain = new WaitingChain();
         final ExecutorService executor = Executors.newFixedThreadPool(threadCount);
 
         //TODO do smt with futures results.(Print to console if smt going wrong)
@@ -37,11 +37,12 @@ public class ConcurrentFillArea implements IFillArea {
         for (int i = 0; i < threadCount; i++) {
             futures[i] = CompletableFuture.supplyAsync(() -> {
                 try {
+                    chain.startIteration();
                     while (strategy.canRun()) {
                         CoordinatesEntry coordinatesEntry = needToBeChecked.poll();
 
                         if (coordinatesEntry != null) {
-                            chain.enter();
+                            chain.reset();
                             if (coordinatesEntry.typeOfFilling == TypeOfFilling.HorizontalOnly) {
                                 checkVertical(coordinatesEntry, yLength, sourceColour, canvas, needToBeChecked, colour);
                             } else  if (coordinatesEntry.typeOfFilling == TypeOfFilling.VerticalOnly) {
@@ -51,9 +52,9 @@ public class ConcurrentFillArea implements IFillArea {
                                 checkVertical(coordinatesEntry, yLength, sourceColour, canvas, needToBeChecked, colour);
                             }
                         } else {
-                            chain.exit();
+                            chain.endIteration();
 
-                            if(chain.isLimitSucceed())
+                            if(chain.isLimitSucceed(threadCount))
                                 strategy.stop();
                             else
                                 strategy.trySpinWait();
@@ -70,8 +71,9 @@ public class ConcurrentFillArea implements IFillArea {
 
         try {
             executor.shutdown();
+            //TODO set timeout in parameters
             if(!executor.awaitTermination(60, TimeUnit.SECONDS)){
-                //TODO all errors should be displayed useing view
+                //TODO all errors should be displayed using view
                 System.out.println("Cann't execute within timeout 60 seconds");
                 for(CompletableFuture future: futures){
                     future.cancel(true);
@@ -81,14 +83,6 @@ public class ConcurrentFillArea implements IFillArea {
         } catch (InterruptedException e) {
             e.printStackTrace();
             throw new RuntimeException(e);
-        }
-    }
-
-    private static class ThreadRunnable implements Runnable{
-
-        @Override
-        public void run() {
-
         }
     }
 

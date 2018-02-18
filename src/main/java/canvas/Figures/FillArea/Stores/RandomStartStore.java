@@ -1,6 +1,6 @@
-package canvas.Writers.FillArea.Stores;
+package canvas.Figures.FillArea.Stores;
 
-import canvas.Writers.FillArea.WaitStrategy.IWaitStrategy;
+import canvas.Figures.FillArea.WaitStrategy.IWaitStrategy;
 
 import java.util.Random;
 import java.util.concurrent.atomic.AtomicReferenceArray;

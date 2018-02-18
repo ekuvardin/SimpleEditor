@@ -1,4 +1,4 @@
-package canvas.Writers.Lines;
+package canvas.Figures.Lines;
 
 import canvas.Canvas;
 

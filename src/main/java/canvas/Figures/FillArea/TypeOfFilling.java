@@ -1,4 +1,4 @@
-package canvas.Writers.FillArea;
+package canvas.Figures.FillArea;
 
 enum TypeOfFilling {
     AllDirections,

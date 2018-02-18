@@ -1,4 +1,4 @@
-package canvas.Writers.FillArea;
+package canvas.Figures.FillArea;
 
 class CoordinatesEntry {
     int x;

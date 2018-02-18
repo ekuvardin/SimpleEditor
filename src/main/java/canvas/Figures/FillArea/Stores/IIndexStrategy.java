@@ -1,4 +1,4 @@
-package canvas.Writers.FillArea.Stores;
+package canvas.Figures.FillArea.Stores;
 
 @FunctionalInterface
 public interface IIndexStrategy {

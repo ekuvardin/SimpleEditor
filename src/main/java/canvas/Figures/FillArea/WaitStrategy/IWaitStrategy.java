@@ -1,4 +1,4 @@
-package canvas.Writers.FillArea.WaitStrategy;
+package canvas.Figures.FillArea.WaitStrategy;
 
 public interface IWaitStrategy {
 

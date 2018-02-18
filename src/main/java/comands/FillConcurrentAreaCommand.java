@@ -2,7 +2,7 @@ package comands;
 
 import canvas.Canvas;
 import canvas.Viewer.IView;
-import canvas.Writers.FillArea.ConcurrentFillArea;
+import canvas.Figures.FillArea.ConcurrentFillArea;
 
 public class FillConcurrentAreaCommand extends FillAreaCommand {
 
