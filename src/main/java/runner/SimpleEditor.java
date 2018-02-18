@@ -1,5 +1,6 @@
+package runner;
+
 import canvas.Viewer.ConsoleViewer;
-import canvas.Viewer.IView;
 import comands.*;
 import parser.IConsoleParser;
 import parser.SimpleOptionParser;
@@ -11,13 +12,14 @@ public class SimpleEditor {
     public static void main(String[] args) {
         IConsoleParser parser = new SimpleOptionParser();
         ConsoleViewer view = new ConsoleViewer();
-
+        SimpleEditor w = new SimpleEditor();
+        view.printMessage("Welcome to simple drawing program!");
         try (Scanner scanner = new Scanner(System.in)) {
-            ICommand command = null;
+            ICommand command;
             do {
                 command = parser.parseCommand((scanner.nextLine()).split("\\s+"));
                 command.execute(view);
-            } while (!(command instanceof QuitCommand));
+            } while (!(command.quitCommand()));
         }
     }
 }

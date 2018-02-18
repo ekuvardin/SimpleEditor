@@ -4,7 +4,7 @@ import canvas.Canvas;
 
 import java.util.*;
 
-public class SingleThreadFill implements IFillArea {
+public class SingleThreadFillArea implements IFillArea {
 
     @Override
     public void fill(Canvas canvas, int x, int y, char colour, int threadCount) {
@@ -18,7 +18,8 @@ public class SingleThreadFill implements IFillArea {
         int xLength = canvas.getxLength();
         int yLength = canvas.getyLength();
 
-        ArrayList<CoordinatesEntry> needToBeChecked = new ArrayList<>(xLength);
+        //
+        ArrayList<CoordinatesEntry> needToBeChecked = new ArrayList<>((xLength + yLength)*2);
 
         // first iteration
         CoordinatesEntry coordinatesEntryFirst = new CoordinatesEntry(x, y);

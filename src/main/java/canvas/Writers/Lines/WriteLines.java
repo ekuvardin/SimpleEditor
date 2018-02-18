@@ -1,10 +1,8 @@
-package canvas.Writers;
+package canvas.Writers.Lines;
 
 import canvas.Canvas;
-import canvas.SimpleCanvas;
-import canvas.Viewer.ConsoleViewer;
 
-public class Writer {
+public class WriteLines {
 
     public static boolean writeRectangle(Canvas canvas, int x1, int y1, int x2, int y2, char colour) {
         int xLength = canvas.getxLength();
@@ -27,21 +25,12 @@ public class Writer {
             return false;
         }
 
-        // Simple optimization
+        // Simple optimization if the line are orthogonal x or y.
         if (x1 == x2 || y1 == y2) {
             for (int i = Math.min(x1, x2); i <= Math.max(x1, x2); i++)
                 for (int j = Math.min(y1, y2); j <= Math.max(y1, y2); j++)
                     canvas.set(i, j, colour);
         } else {
-            // Find line equation of the line
-            // (y - y1)/(y2-y1) = (x - x1)/(x2 - x1)
-            // y - y1 = (x - x1)(y2-y1)/(x2 - x1)
-            // y = y1 + (x - x1)(y2-y1)/(x2 - x1)
-
-            // (x - x1)/(x2 - x1) = (y - y1)/(y2-y1)
-            // (x - x1) = (y - y1)(x2 - x1)/(y2-y1)
-            // x = x1 + (y - y1)(x2 - x1)/(y2-y1)
-
             // try to draw line from left to write
             // To do this we should find min x coordinate
             int startx, starty, endx, endy;
@@ -61,9 +50,14 @@ public class Writer {
             canvas.set(endx, endy, colour);
 
             if (y1 < y2) {
+                // Find line equation of the line
+                // (y - y1)/(y2-y1) = (x - x1)/(x2 - x1)
+                // y - y1 = (x - x1)(y2-y1)/(x2 - x1)
+                // y = y1 + (x - x1)(y2-y1)/(x2 - x1)
                 int newX = startx;
                 int newY = starty;
                 while (newX < endx && newY <= endy) {
+                    //TODO optimize coefficient
                     double newYcompare = findY(newX + 1, startx, starty, endx, endy);
 
                     if (newYcompare == newY + 1) {
@@ -78,13 +72,16 @@ public class Writer {
                         newY++;
                         canvas.set(newX, newY, colour);
                     }
-                    ConsoleViewer v = new ConsoleViewer();
-                    v.draw(canvas);
                 }
             } else {
+                // Find line equation of the line
+                // (x - x1)/(x2 - x1) = (y - y1)/(y2-y1)
+                // (x - x1) = (y - y1)(x2 - x1)/(y2-y1)
+                // x = x1 + (y - y1)(x2 - x1)/(y2-y1)
                 int newX = startx;
                 int newY = starty;
                 while (newX <= endx && newY > endy) {
+                    //TODO optimize coefficient
                     double newXcompare = findX(newY - 1, startx, starty, endx, endy);
 
                     if (newXcompare == newX + 1) {
@@ -101,8 +98,6 @@ public class Writer {
                         canvas.set(newX, newY, colour);
 
                     }
-                    ConsoleViewer v = new ConsoleViewer();
-                    v.draw(canvas);
                 }
             }
         }

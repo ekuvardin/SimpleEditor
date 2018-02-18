@@ -18,4 +18,13 @@ public class ErrorCommand implements ICommand {
     public void execute(IView view) {
         view.showError(message);
     }
+
+    @Override
+    public boolean quitCommand() {
+        return false;
+    }
+
+    public String getMessage() {
+        return message;
+    }
 }

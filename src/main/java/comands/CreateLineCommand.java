@@ -1,9 +1,8 @@
 package comands;
 
 import canvas.Canvas;
-import canvas.SimpleCanvas;
 import canvas.Viewer.IView;
-import canvas.Writers.Writer;
+import canvas.Writers.Lines.WriteLines;
 
 public class CreateLineCommand implements ICommand {
 
@@ -25,7 +24,28 @@ public class CreateLineCommand implements ICommand {
             return;
         }
 
-        Writer.writeLine(canvas, x1, y1, x2, y2, colour);
+        WriteLines.writeLine(canvas, x1, y1, x2, y2, colour);
         view.draw(canvas);
+    }
+
+    @Override
+    public boolean quitCommand() {
+        return false;
+    }
+
+    public int getX1() {
+        return x1;
+    }
+
+    public int getY1() {
+        return y1;
+    }
+
+    public int getX2() {
+        return x2;
+    }
+
+    public int getY2() {
+        return y2;
     }
 }

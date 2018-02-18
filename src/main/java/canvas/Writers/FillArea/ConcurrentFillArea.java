@@ -24,9 +24,6 @@ public class ConcurrentFillArea implements IFillArea {
         ArrayBlockingQueue<CoordinatesEntry> needToBeChecked = new ArrayBlockingQueue<>(yLength * xLength);
 
         // first iteration
-        //CoordinatesEntry entryFirst = new CoordinatesEntry(x, y);
-      //  checkHorizontal(entryFirst, xLength, sourceColour, canvas, needToBeChecked, colour);
-      //  checkVertical(entryFirst, yLength, sourceColour, canvas, needToBeChecked, colour);
         canvas.set(x, y, colour);
         needToBeChecked.add(new CoordinatesEntry(x, y));
 
@@ -34,7 +31,9 @@ public class ConcurrentFillArea implements IFillArea {
         final WaitingChain chain = new WaitingChain(threadCount);
         final ExecutorService executor = Executors.newFixedThreadPool(threadCount);
 
+        //TODO do smt with futures results.(Print to console if smt going wrong)
         CompletableFuture[] futures = new CompletableFuture[threadCount];
+
         for (int i = 0; i < threadCount; i++) {
             futures[i] = CompletableFuture.supplyAsync(() -> {
                 try {
@@ -68,12 +67,28 @@ public class ConcurrentFillArea implements IFillArea {
             }, executor);
         }
 
+
         try {
+            executor.shutdown();
             if(!executor.awaitTermination(60, TimeUnit.SECONDS)){
-                System.err.println("Cann't execute within timeout");
+                //TODO all errors should be displayed useing view
+                System.out.println("Cann't execute within timeout 60 seconds");
+                for(CompletableFuture future: futures){
+                    future.cancel(true);
+                }
+                executor.shutdownNow();
             }
         } catch (InterruptedException e) {
             e.printStackTrace();
+            throw new RuntimeException(e);
+        }
+    }
+
+    private static class ThreadRunnable implements Runnable{
+
+        @Override
+        public void run() {
+
         }
     }
 

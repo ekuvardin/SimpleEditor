@@ -11,7 +11,7 @@ public class CreateConcurrentCanvasCommand extends CreateCanvasCommand {
 
     @Override
     public void execute(IView view) {
-        ConcurrentCanvas canvas = new ConcurrentCanvas(this.weight, this.height);
+        ConcurrentCanvas canvas = new ConcurrentCanvas(this.width, this.height);
         view.draw(canvas);
     }
 }

@@ -5,17 +5,31 @@ import canvas.Viewer.IView;
 
 public class CreateCanvasCommand implements ICommand {
 
-    protected int weight;
+    protected int width;
     protected int height;
 
-    public CreateCanvasCommand(int weight, int height) {
-        this.weight = weight;
+    public CreateCanvasCommand(int width, int height) {
+        this.width = width;
         this.height = height;
     }
 
     @Override
     public void execute(IView view) {
-        SimpleCanvas simpleCanvas = new SimpleCanvas(this.weight, this.height);
+        SimpleCanvas simpleCanvas = new SimpleCanvas(this.width, this.height);
         view.draw(simpleCanvas);
+    }
+
+    @Override
+    public boolean quitCommand() {
+        return false;
+    }
+
+    public int getHeight() {
+        return height;
+    }
+
+    public int getWidth() {
+        return width;
+
     }
 }
