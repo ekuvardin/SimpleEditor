@@ -56,6 +56,6 @@ public class WaitingChain {
             }
             localEnded++;
         }
-        return minWaitThreads >= localEnded;
+        return minWaitThreads <= localEnded;
     }
 }
