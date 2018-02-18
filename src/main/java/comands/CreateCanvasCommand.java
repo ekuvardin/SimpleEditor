@@ -30,6 +30,5 @@ public class CreateCanvasCommand implements ICommand {
 
     public int getWidth() {
         return width;
-
     }
 }
