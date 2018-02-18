@@ -35,7 +35,7 @@ public class ConcurrentCanvasTest extends CommonCanvasTests {
         checkResult(command, expected);
     }
 
-    @Test(timeout = 10000)
+    @Test(timeout = 100000)
     public void consoleShouldFillCanvasInConcurrentInSeveralThreads() throws IOException {
         canvas = createCanvas(8, 8);
         CreateRectangleCommand createLineCommand = new CreateRectangleCommand(1, 1, 3, 3);

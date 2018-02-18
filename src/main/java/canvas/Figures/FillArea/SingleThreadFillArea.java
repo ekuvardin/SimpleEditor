@@ -4,6 +4,9 @@ import canvas.Canvas;
 
 import java.util.*;
 
+/**
+ * Fill area
+ */
 public class SingleThreadFillArea implements IFillArea {
 
     @Override
@@ -19,46 +22,46 @@ public class SingleThreadFillArea implements IFillArea {
         int yLength = canvas.getyLength();
 
         //
-        ArrayList<CoordinatesEntry> needToBeChecked = new ArrayList<>((xLength + yLength)*2);
+        ArrayList<CoordinatesTypeEntry> needToBeChecked = new ArrayList<>((xLength + yLength)*2);
 
         // first iteration
-        CoordinatesEntry coordinatesEntryFirst = new CoordinatesEntry(x, y);
-        checkHorizontal(coordinatesEntryFirst, xLength, sourceColour, canvas, needToBeChecked, colour);
-        checkVertical(coordinatesEntryFirst, yLength, sourceColour, canvas, needToBeChecked, colour);
+        CoordinatesTypeEntry coordinatesTypeEntryFirst = new CoordinatesTypeEntry(x, y);
+        checkHorizontal(coordinatesTypeEntryFirst, xLength, sourceColour, canvas, needToBeChecked, colour);
+        checkVertical(coordinatesTypeEntryFirst, yLength, sourceColour, canvas, needToBeChecked, colour);
         canvas.set(x, y, colour);
 
         while (!needToBeChecked.isEmpty()) {
-            CoordinatesEntry coordinatesEntry = needToBeChecked.remove(needToBeChecked.size() - 1);
+            CoordinatesTypeEntry coordinatesTypeEntry = needToBeChecked.remove(needToBeChecked.size() - 1);
 
-            if (coordinatesEntry.typeOfFilling == TypeOfFilling.HorizontalOnly) {
-                checkVertical(coordinatesEntry, yLength, sourceColour, canvas, needToBeChecked, colour);
+            if (coordinatesTypeEntry.typeOfFilling == TypeOfFilling.HorizontalOnly) {
+                checkVertical(coordinatesTypeEntry, yLength, sourceColour, canvas, needToBeChecked, colour);
             } else {
-                checkHorizontal(coordinatesEntry, xLength, sourceColour, canvas, needToBeChecked, colour);
+                checkHorizontal(coordinatesTypeEntry, xLength, sourceColour, canvas, needToBeChecked, colour);
             }
         }
     }
 
-    private void checkHorizontal(CoordinatesEntry coordinatesEntry, int xLength, char sourceColour, Canvas canvas, List<CoordinatesEntry> needToBeChecked, char colour) {
-        for (int i = coordinatesEntry.x + 1; i <= xLength && canvas.get(i, coordinatesEntry.y) == sourceColour; i++) {
-            canvas.set(i, coordinatesEntry.y, colour);
-            needToBeChecked.add(new CoordinatesEntry(i, coordinatesEntry.y, TypeOfFilling.HorizontalOnly));
+    private void checkHorizontal(CoordinatesTypeEntry coordinatesTypeEntry, int xLength, char sourceColour, Canvas canvas, List<CoordinatesTypeEntry> needToBeChecked, char colour) {
+        for (int i = coordinatesTypeEntry.x + 1; i <= xLength && canvas.get(i, coordinatesTypeEntry.y) == sourceColour; i++) {
+            canvas.set(i, coordinatesTypeEntry.y, colour);
+            needToBeChecked.add(new CoordinatesTypeEntry(i, coordinatesTypeEntry.y, TypeOfFilling.HorizontalOnly));
         }
 
-        for (int i = coordinatesEntry.x - 1; i > 0 && canvas.get(i, coordinatesEntry.y) == sourceColour; i--) {
-            canvas.set(i, coordinatesEntry.y, colour);
-            needToBeChecked.add(new CoordinatesEntry(i, coordinatesEntry.y, TypeOfFilling.HorizontalOnly));
+        for (int i = coordinatesTypeEntry.x - 1; i > 0 && canvas.get(i, coordinatesTypeEntry.y) == sourceColour; i--) {
+            canvas.set(i, coordinatesTypeEntry.y, colour);
+            needToBeChecked.add(new CoordinatesTypeEntry(i, coordinatesTypeEntry.y, TypeOfFilling.HorizontalOnly));
         }
     }
 
-    private void checkVertical(CoordinatesEntry coordinatesEntry, int yLength, char sourceColour, Canvas canvas, List<CoordinatesEntry> needToBeChecked, char colour) {
-        for (int j = coordinatesEntry.y + 1; j <= yLength && canvas.get(coordinatesEntry.x, j) == sourceColour; j++) {
-            canvas.set(coordinatesEntry.x, j, colour);
-            needToBeChecked.add(new CoordinatesEntry(coordinatesEntry.x, j, TypeOfFilling.VerticalOnly));
+    private void checkVertical(CoordinatesTypeEntry coordinatesTypeEntry, int yLength, char sourceColour, Canvas canvas, List<CoordinatesTypeEntry> needToBeChecked, char colour) {
+        for (int j = coordinatesTypeEntry.y + 1; j <= yLength && canvas.get(coordinatesTypeEntry.x, j) == sourceColour; j++) {
+            canvas.set(coordinatesTypeEntry.x, j, colour);
+            needToBeChecked.add(new CoordinatesTypeEntry(coordinatesTypeEntry.x, j, TypeOfFilling.VerticalOnly));
         }
 
-        for (int j = coordinatesEntry.y - 1; j > 0 && canvas.get(coordinatesEntry.x, j) == sourceColour; j--) {
-            canvas.set(coordinatesEntry.x, j, colour);
-            needToBeChecked.add(new CoordinatesEntry(coordinatesEntry.x, j, TypeOfFilling.VerticalOnly));
+        for (int j = coordinatesTypeEntry.y - 1; j > 0 && canvas.get(coordinatesTypeEntry.x, j) == sourceColour; j--) {
+            canvas.set(coordinatesTypeEntry.x, j, colour);
+            needToBeChecked.add(new CoordinatesTypeEntry(coordinatesTypeEntry.x, j, TypeOfFilling.VerticalOnly));
         }
     }
 }

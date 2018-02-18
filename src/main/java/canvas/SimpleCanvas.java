@@ -2,6 +2,9 @@ package canvas;
 
 import java.util.Arrays;
 
+/**
+ * Simple canvas to store point
+ */
 public class SimpleCanvas extends Canvas {
 
     private char[][] array;

@@ -4,6 +4,9 @@ import canvas.Canvas;
 import canvas.Viewer.IView;
 import canvas.Figures.Lines.WriteLines;
 
+/**
+ * Create line command
+ */
 public class CreateLineCommand implements ICommand {
 
     private int x1, y1, x2, y2;

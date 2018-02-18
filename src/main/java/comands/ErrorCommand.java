@@ -2,6 +2,9 @@ package comands;
 
 import canvas.Viewer.IView;
 
+/**
+ * Contains error during parsing command
+ */
 public class ErrorCommand implements ICommand {
 
     private String message;

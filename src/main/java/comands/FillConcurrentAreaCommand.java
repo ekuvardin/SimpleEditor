@@ -4,6 +4,9 @@ import canvas.Canvas;
 import canvas.Viewer.IView;
 import canvas.Figures.FillArea.ConcurrentFillArea;
 
+/*
+  Fill area with several threads
+ */
 public class FillConcurrentAreaCommand extends FillAreaCommand {
 
     protected int threadCount;

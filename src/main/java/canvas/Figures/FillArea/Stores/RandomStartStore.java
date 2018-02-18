@@ -55,6 +55,22 @@ public class RandomStartStore<T> implements IStore<T> {
     }
 
     @Override
+    public T poll()  {
+        int localIndex = lastGet.get();
+
+        T item = null;
+        while (array.get(localIndex) == null || (item = array.getAndSet(localIndex, null)) == null) {
+            localIndex = indexStrategy.getIndex(localIndex);
+            if (lastGet.get().equals(localIndex)) {
+                break;
+            }
+        }
+
+        lastGet.set(localIndex);
+        return item;
+    }
+
+    @Override
     public void put(T input) throws InterruptedException {
         int localIndex = lastPut.get();
 

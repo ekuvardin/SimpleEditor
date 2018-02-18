@@ -4,6 +4,9 @@ import canvas.Canvas;
 import canvas.Viewer.IView;
 import canvas.Figures.FillArea.SingleThreadFillArea;
 
+/*
+  Fill area in single thread
+ */
 public class FillAreaCommand implements ICommand {
 
     protected int x;

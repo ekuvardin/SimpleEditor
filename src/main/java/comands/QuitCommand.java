@@ -2,6 +2,9 @@ package comands;
 
 import canvas.Viewer.IView;
 
+/*
+   Last command before terminating
+ */
 public class QuitCommand implements ICommand {
 
     public void execute(IView view) {

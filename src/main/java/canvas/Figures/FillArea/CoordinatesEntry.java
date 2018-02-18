@@ -1,21 +1,15 @@
 package canvas.Figures.FillArea;
 
-class CoordinatesEntry {
+/**
+ * Describe point to handling
+ */
+public class CoordinatesEntry {
     int x;
     int y;
-
-    TypeOfFilling typeOfFilling;
 
     CoordinatesEntry(int x, int y) {
         this.x = x;
         this.y = y;
-        typeOfFilling = TypeOfFilling.AllDirections;
-    }
-
-    CoordinatesEntry(int x, int y, TypeOfFilling typeOfFilling) {
-        this.x = x;
-        this.y = y;
-        this.typeOfFilling = typeOfFilling;
     }
 
     @Override
@@ -23,10 +17,10 @@ class CoordinatesEntry {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        CoordinatesEntry coordinatesEntry = (CoordinatesEntry) o;
+        CoordinatesEntry that = (CoordinatesEntry) o;
 
-        if (x != coordinatesEntry.x) return false;
-        return y == coordinatesEntry.y;
+        if (x != that.x) return false;
+        return y == that.y;
     }
 
     @Override

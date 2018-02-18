@@ -27,4 +27,9 @@ public interface IStore<T> {
      * Clear store
      */
     void clear() throws InterruptedException;
+
+    /**
+     * Get without wait
+     */
+    T poll();
 }

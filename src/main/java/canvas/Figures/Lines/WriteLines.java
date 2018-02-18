@@ -2,27 +2,51 @@ package canvas.Figures.Lines;
 
 import canvas.Canvas;
 
+/**
+ * Write some simple primitives like lines
+ */
 public class WriteLines {
 
-    public static boolean writeRectangle(Canvas canvas, int x1, int y1, int x2, int y2, char colour) {
+    /**
+     * Write rectangle to model
+     * @param canvas model
+     * @param x1 x1
+     * @param y1 y1
+     * @param x2 x2
+     * @param y2 y2
+     * @param colour colour
+     */
+    public static void writeRectangle(Canvas canvas, int x1, int y1, int x2, int y2, char colour) {
         int xLength = canvas.getxLength();
         int yLength = canvas.getyLength();
 
         if (x1 > xLength || x2 > xLength || y1 > yLength || y2 > yLength) {
             System.out.println(String.format("Couldn't create rectangle inside current simpleCanvas width: %d, height: %d", xLength, yLength));
-            return false;
+            return;
         }
 
-        return writeLine(canvas, x1, y1, x1, y2, colour) && writeLine(canvas, x1, y2, x2, y2, colour) && writeLine(canvas, x2, y2, x2, y1, colour) && writeLine(canvas, x2, y1, x1, y1, colour);
+        writeLine(canvas, x1, y1, x1, y2, colour);
+        writeLine(canvas, x1, y2, x2, y2, colour);
+        writeLine(canvas, x2, y2, x2, y1, colour);
+        writeLine(canvas, x2, y1, x1, y1, colour);
     }
 
-    public static boolean writeLine(Canvas canvas, int x1, int y1, int x2, int y2, char colour) {
+    /**
+     * Write line to model
+     * @param canvas model
+     * @param x1 x1
+     * @param y1 y1
+     * @param x2 x2
+     * @param y2 y2
+     * @param colour colour
+     */
+    public static void writeLine(Canvas canvas, int x1, int y1, int x2, int y2, char colour) {
         int xLength = canvas.getxLength();
         int yLength = canvas.getyLength();
 
         if (x1 > xLength || x2 > xLength || y1 > yLength || y2 > yLength) {
             System.out.println(String.format("Couldn't create line inside current simpleCanvas width: %d, height: %d", xLength, yLength));
-            return false;
+            return;
         }
 
         // Simple optimization if the line are orthogonal x or y.
@@ -101,8 +125,6 @@ public class WriteLines {
                 }
             }
         }
-
-        return true;
     }
 
     private static double findY(int x, int x1, int y1, int x2, int y2) {

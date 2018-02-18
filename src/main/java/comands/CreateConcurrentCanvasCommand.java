@@ -3,6 +3,9 @@ package comands;
 import canvas.ConcurrentCanvas;
 import canvas.Viewer.IView;
 
+/*
+  Create canvas which can be used due parallel filling
+ */
 public class CreateConcurrentCanvasCommand extends CreateCanvasCommand {
 
     public CreateConcurrentCanvasCommand(int weight, int height) {

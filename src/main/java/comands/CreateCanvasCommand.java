@@ -3,6 +3,9 @@ package comands;
 import canvas.SimpleCanvas;
 import canvas.Viewer.IView;
 
+/**
+ * Create simple canvas
+ */
 public class CreateCanvasCommand implements ICommand {
 
     protected int width;

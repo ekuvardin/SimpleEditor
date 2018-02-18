@@ -2,6 +2,9 @@ package canvas;
 
 import java.util.concurrent.atomic.AtomicIntegerArray;
 
+/**
+ * Canvas to store point which can be accessed parallel
+ */
 public class ConcurrentCanvas extends Canvas {
 
     private AtomicIntegerArray array;

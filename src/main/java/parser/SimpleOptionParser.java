@@ -4,6 +4,9 @@ import comands.*;
 
 import java.util.Arrays;
 
+/**
+ * Parse entered commands
+ */
 public class SimpleOptionParser implements IConsoleParser {
 
     @Override

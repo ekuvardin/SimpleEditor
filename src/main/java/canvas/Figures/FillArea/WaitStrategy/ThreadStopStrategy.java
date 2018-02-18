@@ -1,5 +1,8 @@
 package canvas.Figures.FillArea.WaitStrategy;
 
+/**
+ * Handle thread execution using stopTolerant flag
+ */
 public class ThreadStopStrategy implements IWaitStrategy {
 
     private volatile boolean stopTolerant = false;
