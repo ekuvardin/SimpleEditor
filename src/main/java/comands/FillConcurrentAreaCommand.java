@@ -20,8 +20,7 @@ public class FillConcurrentAreaCommand extends FillAreaCommand {
     public void execute(IView view) {
         Canvas canvas = Canvas.getCurrentCanvas();
         if(canvas.canBeParallelUsed()) {
-            ConcurrentFillArea concurrentFillArea = new ConcurrentFillArea();
-            concurrentFillArea.fill(Canvas.getCurrentCanvas(), x, y, colour, threadCount);
+            ConcurrentFillArea.fill(Canvas.getCurrentCanvas(), x, y, colour, threadCount);
 
             view.draw(Canvas.getCurrentCanvas());
         } else {

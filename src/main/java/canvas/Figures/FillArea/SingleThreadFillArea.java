@@ -7,10 +7,16 @@ import java.util.*;
 /**
  * Fill area
  */
-public class SingleThreadFillArea implements IFillArea {
+public class SingleThreadFillArea {
 
-    @Override
-    public void fill(Canvas canvas, int x, int y, char colour, int threadCount) {
+    /**
+     * Fill area with specified colour
+     * @param canvas model
+     * @param x x
+     * @param y y
+     * @param colour colour
+     */
+    public static void fill(Canvas canvas, int x, int y, char colour) {
         char sourceColour = canvas.get(x, y);
 
         // Nothing to do here
@@ -41,7 +47,7 @@ public class SingleThreadFillArea implements IFillArea {
         }
     }
 
-    private void checkHorizontal(CoordinatesTypeEntry coordinatesTypeEntry, int xLength, char sourceColour, Canvas canvas, List<CoordinatesTypeEntry> needToBeChecked, char colour) {
+    private static void checkHorizontal(CoordinatesTypeEntry coordinatesTypeEntry, int xLength, char sourceColour, Canvas canvas, List<CoordinatesTypeEntry> needToBeChecked, char colour) {
         for (int i = coordinatesTypeEntry.x + 1; i <= xLength && canvas.get(i, coordinatesTypeEntry.y) == sourceColour; i++) {
             canvas.set(i, coordinatesTypeEntry.y, colour);
             needToBeChecked.add(new CoordinatesTypeEntry(i, coordinatesTypeEntry.y, TypeOfFilling.HorizontalOnly));
@@ -53,7 +59,7 @@ public class SingleThreadFillArea implements IFillArea {
         }
     }
 
-    private void checkVertical(CoordinatesTypeEntry coordinatesTypeEntry, int yLength, char sourceColour, Canvas canvas, List<CoordinatesTypeEntry> needToBeChecked, char colour) {
+    private static void checkVertical(CoordinatesTypeEntry coordinatesTypeEntry, int yLength, char sourceColour, Canvas canvas, List<CoordinatesTypeEntry> needToBeChecked, char colour) {
         for (int j = coordinatesTypeEntry.y + 1; j <= yLength && canvas.get(coordinatesTypeEntry.x, j) == sourceColour; j++) {
             canvas.set(coordinatesTypeEntry.x, j, colour);
             needToBeChecked.add(new CoordinatesTypeEntry(coordinatesTypeEntry.x, j, TypeOfFilling.VerticalOnly));

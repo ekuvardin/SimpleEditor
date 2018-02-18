@@ -120,7 +120,6 @@ public class WriteLines {
                     } else {
                         newX++;
                         canvas.set(newX, newY, colour);
-
                     }
                 }
             }

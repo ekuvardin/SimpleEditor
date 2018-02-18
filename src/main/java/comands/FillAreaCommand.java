@@ -21,8 +21,7 @@ public class FillAreaCommand implements ICommand {
 
     @Override
     public void execute(IView view) {
-        SingleThreadFillArea singleThreadFillArea = new SingleThreadFillArea();
-        singleThreadFillArea.fill(Canvas.getCurrentCanvas(), x, y, colour, 1);
+        SingleThreadFillArea.fill(Canvas.getCurrentCanvas(), x, y, colour);
 
         view.draw(Canvas.getCurrentCanvas());
     }

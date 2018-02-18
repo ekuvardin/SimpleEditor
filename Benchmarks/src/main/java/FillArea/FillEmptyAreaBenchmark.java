@@ -28,12 +28,6 @@ public class FillEmptyAreaBenchmark {
     public static class SingleThreadFilling {
 
         private Canvas canvas;
-        IFillArea singleThreadFillArea;
-
-        @Setup(Level.Trial)
-        public void setup() throws InterruptedException {
-            singleThreadFillArea = new SingleThreadFillArea();
-        }
 
         @Setup(Level.Iteration)
         public void preSetup() throws InterruptedException {
@@ -42,7 +36,7 @@ public class FillEmptyAreaBenchmark {
 
         @Benchmark
         public void put() throws InterruptedException {
-            singleThreadFillArea.fill(canvas, 1, 1, 'y', 1);
+            SingleThreadFillArea.fill(canvas, 1, 1, 'y');
         }
     }
 
@@ -58,11 +52,6 @@ public class FillEmptyAreaBenchmark {
         private Canvas canvas;
         IFillArea fillArea;
 
-        @Setup(Level.Trial)
-        public void setup() throws InterruptedException {
-            fillArea = new ConcurrentFillArea();
-        }
-
         @Setup(Level.Iteration)
         public void preSetup() throws InterruptedException {
             canvas = new ConcurrentCanvas(4048, 4048);
@@ -70,7 +59,7 @@ public class FillEmptyAreaBenchmark {
 
         @Benchmark
         public void put() throws InterruptedException {
-            fillArea.fill(canvas, 2024, 2024, 'y', 16);
+            ConcurrentFillArea.fill(canvas, 2024, 2024, 'y', 16);
         }
     }
 

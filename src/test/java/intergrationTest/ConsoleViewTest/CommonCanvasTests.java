@@ -1,7 +1,6 @@
 package intergrationTest.ConsoleViewTest;
 
 import canvas.Canvas;
-import canvas.SimpleCanvas;
 import canvas.Viewer.ConsoleViewer;
 import comands.*;
 import org.junit.After;

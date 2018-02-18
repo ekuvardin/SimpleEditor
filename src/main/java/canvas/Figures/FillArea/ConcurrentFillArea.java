@@ -11,10 +11,17 @@ import java.util.concurrent.*;
 /**
  * Try to fill area with several threads. (Under construction. May work very long but correct(see integration tests)
  */
-public class ConcurrentFillArea implements IFillArea {
+public class ConcurrentFillArea{
 
-    @Override
-    public void fill(Canvas canvas, int x, int y, char colour, int threadCount) {
+    /**
+     * Fill area with specified colour
+     * @param canvas model
+     * @param x x
+     * @param y y
+     * @param colour colour
+     * @param threadCount thread count to fill
+     */
+    public static void fill(Canvas canvas, int x, int y, char colour, int threadCount) {
         char sourceColour = canvas.get(x, y);
 
         // Nothing to do here
@@ -86,7 +93,7 @@ public class ConcurrentFillArea implements IFillArea {
         }
     }
 
-    private void checkHorizontal(CoordinatesEntry coordinatesEntry, int xLength, char sourceColour, Canvas canvas, IStore<CoordinatesEntry> needToBeChecked, char colour) throws InterruptedException {
+    private static void checkHorizontal(CoordinatesEntry coordinatesEntry, int xLength, char sourceColour, Canvas canvas, IStore<CoordinatesEntry> needToBeChecked, char colour) throws InterruptedException {
         //   for (int i = coordinatesEntry.x + 1; i <= xLength && canvas.get(i, coordinatesEntry.y) == sourceColour; i++) {
         int i = coordinatesEntry.x + 1;
         if (i <= xLength && canvas.get(i, coordinatesEntry.y) == sourceColour) {
@@ -101,7 +108,7 @@ public class ConcurrentFillArea implements IFillArea {
         }
     }
 
-    private void checkVertical(CoordinatesEntry coordinatesEntry, int yLength, char sourceColour, Canvas canvas, IStore<CoordinatesEntry> needToBeChecked, char colour) throws InterruptedException {
+    private static void checkVertical(CoordinatesEntry coordinatesEntry, int yLength, char sourceColour, Canvas canvas, IStore<CoordinatesEntry> needToBeChecked, char colour) throws InterruptedException {
         // for (int j = coordinatesEntry.y + 1; j <= yLength && canvas.get(coordinatesEntry.x, j) == sourceColour; j++) {
         int j = coordinatesEntry.y + 1;
         if (j <= yLength && canvas.get(coordinatesEntry.x, j) == sourceColour) {
