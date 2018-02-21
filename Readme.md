@@ -83,8 +83,8 @@ More commands
 
   All commands in doc works the same.
 
-Tests
-  There are 3 kind of tests. I couldn't covering all code with test + benchmarks(shame on me). Then I cover only several special cases:
-		1. Unit tests (test/unitTest/).
-		2. Intergration test (test/intergrationTest/). I think that I cover all available cases + tests on concurrent filling area.
-		3. Benchmarks (\Benchmarks\src\main\java). I made some benchmarks but hasn't yet finished. (Concurrent cases works too log to known problems(described in code TODO)
+
+There are 3 kind of tests. I couldn't covering all code with test + benchmarks(shame on me). Then I cover only several special cases:
+1. Unit tests (test/unitTest/).
+2. Intergration test (test/intergrationTest/). I think that I cover all available cases + tests on concurrent filling area.
+3. Benchmarks (\Benchmarks\src\main\java). I made some benchmarks but hasn't yet finished. (Concurrent cases works too log to known problems(described in code TODO)
