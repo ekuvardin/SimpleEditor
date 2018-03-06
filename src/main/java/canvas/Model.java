@@ -3,13 +3,13 @@ package canvas;
 /**
  * Describe model where points are stored
  */
-public abstract class Canvas {
+public abstract class Model {
 
     /**
      * Only one canvas can be available at time
      */
-    protected Canvas() {
-        currentCanvas = this;
+    protected Model() {
+        currentModel = this;
     }
 
     /**
@@ -34,22 +34,22 @@ public abstract class Canvas {
      * Get x length
      * @return x length
      */
-    public abstract int getxLength();
+    public abstract int getWidth();
 
     /**
      * Get y length
      * @return y length
      */
-    public abstract int getyLength();
+    public abstract int getHeight();
 
-    private static Canvas currentCanvas;
+    private static Model currentModel;
 
     /**
      *  Get current canvas
      * @return current canvas
      */
-    public final static Canvas getCurrentCanvas() {
-        return currentCanvas;
+    public final static Model getCurrentModel() {
+        return currentModel;
     }
 
     /**

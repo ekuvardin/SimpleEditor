@@ -1,6 +1,6 @@
 package comands;
 
-import canvas.ConcurrentCanvas;
+import canvas.ConcurrentModel;
 import canvas.Viewer.IView;
 
 /*
@@ -14,7 +14,7 @@ public class CreateConcurrentCanvasCommand extends CreateCanvasCommand {
 
     @Override
     public void execute(IView view) {
-        ConcurrentCanvas canvas = new ConcurrentCanvas(this.width, this.height);
+        ConcurrentModel canvas = new ConcurrentModel(this.width, this.height);
         view.draw(canvas);
     }
 }

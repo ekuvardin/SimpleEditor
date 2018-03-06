@@ -1,9 +1,8 @@
 package unitTest.SimpleOptionParserTest.commandsTest;
 
-import canvas.Canvas;
-import canvas.SimpleCanvas;
+import canvas.Model;
+import canvas.SimpleModel;
 import canvas.Viewer.IView;
-import comands.CreateLineCommand;
 import comands.CreateRectangleCommand;
 import comands.ICommand;
 import org.junit.Assert;
@@ -27,11 +26,11 @@ public class CreateRectangleCommandTests {
 
     @Test
     public void executeShouldCallDrawCanvas() {
-        Canvas canvas = new SimpleCanvas(4, 4);
+        Model model = new SimpleModel(4, 4);
         ICommand command = new CreateRectangleCommand(1, 2, 3, 4);
         command.execute(view);
 
-        Mockito.verify(view).draw(canvas);
+        Mockito.verify(view).draw(model);
     }
 }
 

@@ -1,17 +1,14 @@
 package unitTest.SimpleOptionParserTest.commandsTest;
 
-import canvas.Canvas;
-import canvas.SimpleCanvas;
 import canvas.Viewer.IView;
 import comands.CreateCanvasCommand;
-import comands.CreateLineCommand;
 import comands.ICommand;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
 
-public class CreateCanvasCommandTests {
+public class CreateModelCommandTests {
 
     IView view;
 

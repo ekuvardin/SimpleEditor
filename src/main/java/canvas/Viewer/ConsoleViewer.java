@@ -1,16 +1,15 @@
 package canvas.Viewer;
 
-import canvas.Canvas;
-import canvas.SimpleCanvas;
+import canvas.Model;
 
 import java.util.Arrays;
 
 public class ConsoleViewer implements IView {
 
     @Override
-    public void draw(Canvas canvas) {
-        int xLength = canvas.getxLength();
-        int yLength = canvas.getyLength();
+    public void draw(Model model) {
+        int xLength = model.getWidth();
+        int yLength = model.getHeight();
         for (int i = 0; i < xLength + 2; i++) {
             System.out.print("-");
         }
@@ -22,7 +21,7 @@ public class ConsoleViewer implements IView {
                 if (i == 0 || i == xLength +1) {
                     System.out.print("|");
                 } else {
-                    System.out.print(canvas.get(i, j));
+                    System.out.print(model.get(i, j));
                 }
             }
             System.out.println();

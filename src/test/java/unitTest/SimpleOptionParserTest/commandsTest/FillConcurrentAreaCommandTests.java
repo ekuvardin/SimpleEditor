@@ -1,12 +1,11 @@
 package unitTest.SimpleOptionParserTest.commandsTest;
 
-import canvas.Canvas;
-import canvas.ConcurrentCanvas;
-import canvas.SimpleCanvas;
+import canvas.Model;
+import canvas.ConcurrentModel;
+import canvas.SimpleModel;
 import canvas.Viewer.IView;
 import comands.FillConcurrentAreaCommand;
 import comands.ICommand;
-import comands.QuitCommand;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -28,22 +27,22 @@ public class FillConcurrentAreaCommandTests {
 
     @Test
     public void executeShouldCallSingleThreadExampleWhenNotParallel() {
-        Canvas canvas = new SimpleCanvas(4,4);
+        Model model = new SimpleModel(4,4);
         ICommand command = new FillConcurrentAreaCommand(1, 2, 'x', 4);
         command.execute(view);
 
-        Mockito.verify(view).printMessage("Warning. Created not parallel canvas. Will be used single thread implementation");
-        Mockito.verify(view).draw(canvas);
+        Mockito.verify(view).printMessage("Warning. Created not parallel model. Will be used single thread implementation");
+        Mockito.verify(view).draw(model);
     }
 
     @Test
     public void executeShouldCallParallelThreadExampleWhenIsParallel() {
-        Canvas canvas = new ConcurrentCanvas(4,4);
+        Model model = new ConcurrentModel(4,4);
         ICommand command = new FillConcurrentAreaCommand(1, 2, 'x', 4);
         command.execute(view);
 
-        Mockito.verify(view, Mockito.never()).printMessage("Warning. Created not parallel canvas. Will be used single thread implementation");
-        Mockito.verify(view).draw(canvas);
+        Mockito.verify(view, Mockito.never()).printMessage("Warning. Created not parallel model. Will be used single thread implementation");
+        Mockito.verify(view).draw(model);
     }
 }
 

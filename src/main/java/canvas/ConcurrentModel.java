@@ -3,15 +3,15 @@ package canvas;
 import java.util.concurrent.atomic.AtomicIntegerArray;
 
 /**
- * Canvas to store point which can be accessed parallel
+ * Model to store point which can be accessed parallel
  */
-public class ConcurrentCanvas extends Canvas {
+public class ConcurrentModel extends Model {
 
     private AtomicIntegerArray array;
     private final int xLength;
     private final int yLength;
 
-    public ConcurrentCanvas(int x, int y) {
+    public ConcurrentModel(int x, int y) {
         array = new AtomicIntegerArray(x * y);
         for (int i = 0; i < x * y; i++) {
             array.set(i, ' ');
@@ -31,11 +31,11 @@ public class ConcurrentCanvas extends Canvas {
         return (char) array.get(xLength * (y - 1) + (x - 1));
     }
 
-    public int getxLength() {
+    public int getWidth() {
         return xLength;
     }
 
-    public int getyLength() {
+    public int getHeight() {
         return yLength;
     }
 

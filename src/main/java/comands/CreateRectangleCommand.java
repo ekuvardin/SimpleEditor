@@ -1,6 +1,6 @@
 package comands;
 
-import canvas.Canvas;
+import canvas.Model;
 import canvas.Viewer.IView;
 import canvas.Figures.Lines.WriteLines;
 
@@ -21,14 +21,14 @@ public class CreateRectangleCommand implements ICommand {
 
     @Override
     public void execute(IView view) {
-        Canvas canvas = Canvas.getCurrentCanvas();
-        if (canvas == null) {
+        Model model = Model.getCurrentModel();
+        if (model == null) {
             System.out.println("Please, create simpleCanvas first. For example: C 20 4");
             return;
         }
 
-        WriteLines.writeRectangle(canvas, x1, y1, x2, y2, colour);
-        view.draw(canvas);
+        WriteLines.writeRectangle(model, x1, y1, x2, y2, colour);
+        view.draw(model);
     }
 
     @Override

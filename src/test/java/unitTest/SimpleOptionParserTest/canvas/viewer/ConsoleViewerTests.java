@@ -1,6 +1,6 @@
 package unitTest.SimpleOptionParserTest.canvas.viewer;
 
-import canvas.Canvas;
+import canvas.Model;
 import canvas.Viewer.ConsoleViewer;
 import comands.ICommand;
 import org.junit.After;
@@ -17,14 +17,14 @@ public class ConsoleViewerTests {
 
     PrintStream oldOut;
     PrintStream oldErr;
-    Canvas canvas;
+    Model model;
     ConsoleViewer view= new ConsoleViewer();;
 
     @Before
     public void preTest() {
         oldOut = System.out;
         oldErr = System.err;
-        canvas = Mockito.mock(Canvas.class);
+        model = Mockito.mock(Model.class);
     }
 
     @After
@@ -36,16 +36,16 @@ public class ConsoleViewerTests {
     @Test
     public void drawShouldPrintCanvas() throws IOException {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        Mockito.when(canvas.getxLength()).thenReturn(2);
-        Mockito.when(canvas.getyLength()).thenReturn(1);
+        Mockito.when(model.getWidth()).thenReturn(2);
+        Mockito.when(model.getHeight()).thenReturn(1);
 
-        Mockito.when(canvas.get(1,1)).thenReturn('e');
-        Mockito.when(canvas.get(2,1)).thenReturn('y');
+        Mockito.when(model.get(1,1)).thenReturn('e');
+        Mockito.when(model.get(2,1)).thenReturn('y');
 
         try(PrintStream ps = new PrintStream(baos)) {
             System.setOut(ps);
 
-            view.draw(canvas);
+            view.draw(model);
 
             String expected =
                     "----"+ "\r\n" +

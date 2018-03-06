@@ -1,6 +1,6 @@
 package intergrationTest.ConsoleViewTest;
 
-import canvas.Canvas;
+import canvas.Model;
 import canvas.Viewer.ConsoleViewer;
 import comands.*;
 import org.junit.After;
@@ -12,10 +12,10 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.PrintStream;
 
-public abstract class CommonCanvasTests {
+public abstract class CommonModelTests {
 
     PrintStream old;
-    Canvas canvas;
+    Model model;
     ConsoleViewer view= new ConsoleViewer();;
 
     @Before
@@ -28,11 +28,11 @@ public abstract class CommonCanvasTests {
         System.setOut(old);
     }
 
-    public abstract Canvas createCanvas(int x, int y);
+    public abstract Model createCanvas(int x, int y);
 
     @Test
     public void consoleShouldPrintEmptyCanvas() throws IOException {
-        canvas = createCanvas(4, 4);
+        model = createCanvas(4, 4);
         ICommand command = new CreateCanvasCommand(4, 4);
 
         String expected =
@@ -47,7 +47,7 @@ public abstract class CommonCanvasTests {
 
     @Test
     public void consoleShouldRePrintEmptyCanvas() throws IOException {
-        canvas = createCanvas(4, 4);
+        model = createCanvas(4, 4);
         ICommand command = new CreateCanvasCommand(4, 4);
 
         String expected =
@@ -71,7 +71,7 @@ public abstract class CommonCanvasTests {
 
     @Test
     public void consoleShouldPrintSimpleLine() throws IOException {
-        canvas = createCanvas(4, 4);
+        model = createCanvas(4, 4);
         ICommand command = new CreateLineCommand(1, 1, 4, 1);
 
         String expected =
@@ -87,7 +87,7 @@ public abstract class CommonCanvasTests {
 
     @Test
     public void consoleShouldPrintSimpleLineInOnePoint() throws IOException {
-        canvas = createCanvas(4, 4);
+        model = createCanvas(4, 4);
         ICommand command = new CreateLineCommand(4, 4, 4, 4);
 
         String expected =
@@ -103,7 +103,7 @@ public abstract class CommonCanvasTests {
 
     @Test
     public void consoleShouldPrintDiagonalLineLeftToRight() throws IOException {
-        canvas = createCanvas(4, 4);
+        model = createCanvas(4, 4);
         ICommand command = new CreateLineCommand(1, 1, 4, 4);
 
         String expected =
@@ -119,7 +119,7 @@ public abstract class CommonCanvasTests {
 
     @Test
     public void consoleShouldPrintDiagonalLineRightToLeft() throws IOException {
-        canvas = createCanvas(4, 4);
+        model = createCanvas(4, 4);
         ICommand command = new CreateLineCommand(1, 4, 4, 1);
 
         String expected =
@@ -135,7 +135,7 @@ public abstract class CommonCanvasTests {
 
     @Test
     public void consoleShouldPrintRectangle() throws IOException {
-        canvas = createCanvas(4, 4);
+        model = createCanvas(4, 4);
         ICommand command = new CreateRectangleCommand(1, 1, 3, 3);
 
         String expected =
@@ -151,7 +151,7 @@ public abstract class CommonCanvasTests {
 
     @Test
     public void consoleShouldPrintRectangleInOnePoint() throws IOException {
-        canvas = createCanvas(4, 4);
+        model = createCanvas(4, 4);
         ICommand command = new CreateRectangleCommand(1, 1, 1, 1);
 
         String expected =
@@ -167,7 +167,7 @@ public abstract class CommonCanvasTests {
 
     @Test
     public void consoleShouldPrintRectangleInOneLine() throws IOException {
-        canvas = createCanvas(4, 4);
+        model = createCanvas(4, 4);
         ICommand command = new CreateRectangleCommand(1, 1, 4, 1);
 
         String expected =
@@ -183,7 +183,7 @@ public abstract class CommonCanvasTests {
 
     @Test
     public void consoleShouldFillCanvas() throws IOException {
-        canvas = createCanvas(4, 4);
+        model = createCanvas(4, 4);
         CreateRectangleCommand createRectangleCommand = new CreateRectangleCommand(1, 1, 3, 3);
         ICommand command =  new FillAreaCommand(4, 1, 'y');
         createRectangleCommand.execute(view);
@@ -201,7 +201,7 @@ public abstract class CommonCanvasTests {
 
     @Test
     public void consoleShouldFillCanvasClickOnLine() throws IOException {
-        canvas = createCanvas(4, 4);
+        model = createCanvas(4, 4);
         CreateRectangleCommand createRectangleCommand = new CreateRectangleCommand(1, 1, 3, 3);
         ICommand command =  new FillAreaCommand(3, 1, 'y');
         createRectangleCommand.execute(view);
@@ -219,7 +219,7 @@ public abstract class CommonCanvasTests {
 
     @Test
     public void consoleShouldFillCanvasClickOnePoint() throws IOException {
-        canvas = createCanvas(4, 4);
+        model = createCanvas(4, 4);
         CreateRectangleCommand createLineCommand = new CreateRectangleCommand(1, 1, 3, 3);
         ICommand command =  new FillAreaCommand(2, 2, 'y');
         createLineCommand.execute(view);

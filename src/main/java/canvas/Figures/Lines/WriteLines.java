@@ -1,6 +1,6 @@
 package canvas.Figures.Lines;
 
-import canvas.Canvas;
+import canvas.Model;
 
 /**
  * Write some simple primitives like lines
@@ -9,40 +9,40 @@ public class WriteLines {
 
     /**
      * Write rectangle to model
-     * @param canvas model
+     * @param model model
      * @param x1 x1
      * @param y1 y1
      * @param x2 x2
      * @param y2 y2
      * @param colour colour
      */
-    public static void writeRectangle(Canvas canvas, int x1, int y1, int x2, int y2, char colour) {
-        int xLength = canvas.getxLength();
-        int yLength = canvas.getyLength();
+    public static void writeRectangle(Model model, int x1, int y1, int x2, int y2, char colour) {
+        int xLength = model.getWidth();
+        int yLength = model.getHeight();
 
         if (x1 > xLength || x2 > xLength || y1 > yLength || y2 > yLength) {
             System.out.println(String.format("Couldn't create rectangle inside current simpleCanvas width: %d, height: %d", xLength, yLength));
             return;
         }
 
-        writeLine(canvas, x1, y1, x1, y2, colour);
-        writeLine(canvas, x1, y2, x2, y2, colour);
-        writeLine(canvas, x2, y2, x2, y1, colour);
-        writeLine(canvas, x2, y1, x1, y1, colour);
+        writeLine(model, x1, y1, x1, y2, colour);
+        writeLine(model, x1, y2, x2, y2, colour);
+        writeLine(model, x2, y2, x2, y1, colour);
+        writeLine(model, x2, y1, x1, y1, colour);
     }
 
     /**
      * Write line to model
-     * @param canvas model
+     * @param model model
      * @param x1 x1
      * @param y1 y1
      * @param x2 x2
      * @param y2 y2
      * @param colour colour
      */
-    public static void writeLine(Canvas canvas, int x1, int y1, int x2, int y2, char colour) {
-        int xLength = canvas.getxLength();
-        int yLength = canvas.getyLength();
+    public static void writeLine(Model model, int x1, int y1, int x2, int y2, char colour) {
+        int xLength = model.getWidth();
+        int yLength = model.getHeight();
 
         if (x1 > xLength || x2 > xLength || y1 > yLength || y2 > yLength) {
             System.out.println(String.format("Couldn't create line inside current simpleCanvas width: %d, height: %d", xLength, yLength));
@@ -53,7 +53,7 @@ public class WriteLines {
         if (x1 == x2 || y1 == y2) {
             for (int i = Math.min(x1, x2); i <= Math.max(x1, x2); i++)
                 for (int j = Math.min(y1, y2); j <= Math.max(y1, y2); j++)
-                    canvas.set(i, j, colour);
+                    model.set(i, j, colour);
         } else {
             // try to draw line from left to write
             // To do this we should find min x coordinate
@@ -70,8 +70,8 @@ public class WriteLines {
                 endy = y1;
             }
 
-            canvas.set(startx, starty, colour);
-            canvas.set(endx, endy, colour);
+            model.set(startx, starty, colour);
+            model.set(endx, endy, colour);
 
             if (y1 < y2) {
                 // Find line equation of the line
@@ -87,14 +87,14 @@ public class WriteLines {
                     if (newYcompare == newY + 1) {
                         newY++;
                         newX++;
-                        canvas.set(newX, newY, colour);
-                        canvas.set(newX, newY - 1, colour);
+                        model.set(newX, newY, colour);
+                        model.set(newX, newY - 1, colour);
                     } else if (newYcompare < newY + 1) {
                         newX++;
-                        canvas.set(newX, newY, colour);
+                        model.set(newX, newY, colour);
                     } else {
                         newY++;
-                        canvas.set(newX, newY, colour);
+                        model.set(newX, newY, colour);
                     }
                 }
             } else {
@@ -111,15 +111,15 @@ public class WriteLines {
                     if (newXcompare == newX + 1) {
                         newY--;
                         newX++;
-                        canvas.set(newX, newY, colour);
+                        model.set(newX, newY, colour);
                         //   array[newX - 2][newY - 1] = colour;
-                        canvas.set(newX, newY + 1, colour);
+                        model.set(newX, newY + 1, colour);
                     } else if (newXcompare < newX + 1) {
                         newY--;
-                        canvas.set(newX, newY, colour);
+                        model.set(newX, newY, colour);
                     } else {
                         newX++;
-                        canvas.set(newX, newY, colour);
+                        model.set(newX, newY, colour);
                     }
                 }
             }

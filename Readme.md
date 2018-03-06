@@ -5,7 +5,7 @@ How to run?
 
 Some assumptions.
 	Example
-	We have canvas 4*4
+	We have model 4*4
 	 "------"
 	 "|    |"
 	 "|    |"
@@ -75,7 +75,7 @@ Special cases
 More commands
   I think that filling area can be done in parallel.(Parallel option is under construction and should be optimized)
 
-  To do this you should create concurrent canvas
+  To do this you should create concurrent model
 
     CN 20 4
     and fill area

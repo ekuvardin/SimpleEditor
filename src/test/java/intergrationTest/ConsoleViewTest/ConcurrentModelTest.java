@@ -1,7 +1,7 @@
 package intergrationTest.ConsoleViewTest;
 
-import canvas.Canvas;
-import canvas.ConcurrentCanvas;
+import canvas.Model;
+import canvas.ConcurrentModel;
 import comands.CreateLineCommand;
 import comands.CreateRectangleCommand;
 import comands.FillConcurrentAreaCommand;
@@ -10,16 +10,16 @@ import org.junit.Test;
 
 import java.io.IOException;
 
-public class ConcurrentCanvasTest extends CommonCanvasTests {
+public class ConcurrentModelTest extends CommonModelTests {
 
     @Override
-    public Canvas createCanvas(int x, int y) {
-        return new ConcurrentCanvas(x, y);
+    public Model createCanvas(int x, int y) {
+        return new ConcurrentModel(x, y);
     }
 
     @Test(timeout = 10000)
     public void consoleShouldFillCanvasInConcurrentInOneThread() throws IOException {
-        canvas = createCanvas(4, 4);
+        model = createCanvas(4, 4);
         CreateRectangleCommand createLineCommand = new CreateRectangleCommand(1, 1, 3, 3);
         ICommand command =  new FillConcurrentAreaCommand(4, 1, 'y', 1);
         createLineCommand.execute(view);
@@ -37,7 +37,7 @@ public class ConcurrentCanvasTest extends CommonCanvasTests {
 
     @Test(timeout = 100000)
     public void consoleShouldFillCanvasInConcurrentInSeveralThreads() throws IOException {
-        canvas = createCanvas(8, 8);
+        model = createCanvas(8, 8);
         CreateRectangleCommand createLineCommand = new CreateRectangleCommand(1, 1, 3, 3);
         ICommand command =  new FillConcurrentAreaCommand(4, 1, 'y', 4);
         createLineCommand.execute(view);
@@ -59,7 +59,7 @@ public class ConcurrentCanvasTest extends CommonCanvasTests {
 
     @Test(timeout = 10000)
     public void consoleShouldFillCanvasInConcurrentInSeveralThreadsOneMoreExample() throws IOException {
-        canvas = createCanvas(8, 8);
+        model = createCanvas(8, 8);
         CreateRectangleCommand createRectangleCommand = new CreateRectangleCommand(1, 1, 3, 3);
         CreateLineCommand createLineCommand = new CreateLineCommand(6, 2, 6, 8);
         CreateLineCommand createLineCommand2 = new CreateLineCommand(4, 5, 5, 5);

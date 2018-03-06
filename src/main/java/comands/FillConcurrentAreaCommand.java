@@ -1,6 +1,6 @@
 package comands;
 
-import canvas.Canvas;
+import canvas.Model;
 import canvas.Viewer.IView;
 import canvas.Figures.FillArea.ConcurrentFillArea;
 
@@ -18,13 +18,13 @@ public class FillConcurrentAreaCommand extends FillAreaCommand {
 
     @Override
     public void execute(IView view) {
-        Canvas canvas = Canvas.getCurrentCanvas();
-        if(canvas.canBeParallelUsed()) {
-            ConcurrentFillArea.fill(Canvas.getCurrentCanvas(), x, y, colour, threadCount);
+        Model model = Model.getCurrentModel();
+        if(model.canBeParallelUsed()) {
+            ConcurrentFillArea.fill(Model.getCurrentModel(), x, y, colour, threadCount);
 
-            view.draw(Canvas.getCurrentCanvas());
+            view.draw(Model.getCurrentModel());
         } else {
-            view.printMessage("Warning. Created not parallel canvas. Will be used single thread implementation");
+            view.printMessage("Warning. Created not parallel model. Will be used single thread implementation");
             super.execute(view);
         }
     }

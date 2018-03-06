@@ -1,7 +1,7 @@
 package intergrationTest.ConsoleViewTest;
 
-import canvas.Canvas;
-import canvas.SimpleCanvas;
+import canvas.Model;
+import canvas.SimpleModel;
 import comands.CreateRectangleCommand;
 import comands.FillConcurrentAreaCommand;
 import comands.ICommand;
@@ -9,23 +9,23 @@ import org.junit.Test;
 
 import java.io.IOException;
 
-public class SimpleCanvasTest extends CommonCanvasTests {
+public class SimpleModelTest extends CommonModelTests {
 
     @Override
-    public Canvas createCanvas(int x, int y) {
-        return new SimpleCanvas(x, y);
+    public Model createCanvas(int x, int y) {
+        return new SimpleModel(x, y);
     }
 
 
     @Test
     public void consoleShouldFillCanvasInConcurrent() throws IOException {
-        canvas = createCanvas(4, 4);
+        model = createCanvas(4, 4);
         CreateRectangleCommand createLineCommand = new CreateRectangleCommand(1, 1, 3, 3);
         ICommand command =  new FillConcurrentAreaCommand(4, 1, 'y', 4);
         createLineCommand.execute(view);
 
         String expected =
-                "Warning. Created not parallel canvas. Will be used single thread implementation" + "\r\n" +
+                "Warning. Created not parallel model. Will be used single thread implementation" + "\r\n" +
                         "------" + "\r\n" +
                         "|xxxy|" + "\r\n" +
                         "|x xy|" + "\r\n" +
@@ -35,6 +35,6 @@ public class SimpleCanvasTest extends CommonCanvasTests {
 
         checkResult(command, expected);
 
-        canvas = createCanvas(4, 4);
+        model = createCanvas(4, 4);
     }
 }

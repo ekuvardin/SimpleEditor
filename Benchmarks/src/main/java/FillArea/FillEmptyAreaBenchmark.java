@@ -1,11 +1,11 @@
 package FillArea;
 
-import canvas.Canvas;
-import canvas.ConcurrentCanvas;
+import canvas.ConcurrentModel;
 import canvas.Figures.FillArea.ConcurrentFillArea;
 import canvas.Figures.FillArea.IFillArea;
 import canvas.Figures.FillArea.SingleThreadFillArea;
-import canvas.SimpleCanvas;
+import canvas.Model;
+import canvas.SimpleModel;
 import org.openjdk.jmh.annotations.*;
 import org.openjdk.jmh.runner.Runner;
 import org.openjdk.jmh.runner.RunnerException;
@@ -27,16 +27,16 @@ public class FillEmptyAreaBenchmark {
     @Fork(1)
     public static class SingleThreadFilling {
 
-        private Canvas canvas;
+        private Model model;
 
         @Setup(Level.Iteration)
         public void preSetup() throws InterruptedException {
-            canvas = new SimpleCanvas(4048, 4048);
+            model = new SimpleModel(4048, 4048);
         }
 
         @Benchmark
         public void put() throws InterruptedException {
-            SingleThreadFillArea.fill(canvas, 1, 1, 'y');
+            SingleThreadFillArea.fill(model, 1, 1, 'y');
         }
     }
 
@@ -49,17 +49,17 @@ public class FillEmptyAreaBenchmark {
     @Fork(1)
     public static class MultipleThreadFilling {
 
-        private Canvas canvas;
+        private Model model;
         IFillArea fillArea;
 
         @Setup(Level.Iteration)
         public void preSetup() throws InterruptedException {
-            canvas = new ConcurrentCanvas(4048, 4048);
+            model = new ConcurrentModel(4048, 4048);
         }
 
         @Benchmark
         public void put() throws InterruptedException {
-            ConcurrentFillArea.fill(canvas, 2024, 2024, 'y', 16);
+            ConcurrentFillArea.fill(model, 2024, 2024, 'y', 16);
         }
     }
 

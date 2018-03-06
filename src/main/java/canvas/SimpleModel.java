@@ -5,13 +5,13 @@ import java.util.Arrays;
 /**
  * Simple canvas to store point
  */
-public class SimpleCanvas extends Canvas {
+public class SimpleModel extends Model {
 
     private char[][] array;
     private final int xLength;
     private final int yLength;
 
-    public SimpleCanvas(int x, int y) {
+    public SimpleModel(int x, int y) {
         this.array = new char[x][y];
         for (int i = 0; i < x; i++) {
             Arrays.fill(array[i], ' ');
@@ -32,12 +32,12 @@ public class SimpleCanvas extends Canvas {
     }
 
     @Override
-    public int getxLength() {
+    public int getWidth() {
         return xLength;
     }
 
     @Override
-    public int getyLength() {
+    public int getHeight() {
         return yLength;
     }
 

@@ -1,7 +1,6 @@
 package canvas.Viewer;
 
-import canvas.Canvas;
-import canvas.SimpleCanvas;
+import canvas.Model;
 
 /**
  * Describe what view to the user
@@ -11,9 +10,9 @@ public interface IView {
     /**
      * draw existing model
      *
-     * @param canvas model
+     * @param model model
      */
-    void draw(Canvas canvas);
+    void draw(Model model);
 
     /**
      * Display exception
