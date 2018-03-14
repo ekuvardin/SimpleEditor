@@ -18,7 +18,7 @@ public class SingleThreadFillArea implements IFillArea {
     @Override
     public void fill(int x, int y, int minWidth, int maxWidth, int minHeight, int maxHeight, char colour) {
         char sourceColour = model.get(x, y);
-
+        Bound bound = new Bound(minWidth, maxWidth, minHeight, maxHeight);
         // Nothing to do here
         if (sourceColour == colour) {
             return;
@@ -33,42 +33,42 @@ public class SingleThreadFillArea implements IFillArea {
         model.set(x, y, colour);
 
         while (!needToBeChecked.isEmpty()) {
-            CoordinatesTypeEntry coordinatesTypeEntry = getAny(needToBeChecked);
+            CoordinatesTypeEntry coordinatesTypeEntry = getAny(needToBeChecked, bound);
 
             if (coordinatesTypeEntry.typeOfFilling == TypeOfFilling.HorizontalOnly) {
-                checkVertical(coordinatesTypeEntry, yLength, needToBeChecked, sourceColour, colour);
+                checkVertical(coordinatesTypeEntry, bound, needToBeChecked, sourceColour, colour);
             } else if (coordinatesTypeEntry.typeOfFilling == TypeOfFilling.VerticalOnly) {
-                checkHorizontal(coordinatesTypeEntry, xLength, needToBeChecked, sourceColour, colour);
+                checkHorizontal(coordinatesTypeEntry, bound, needToBeChecked, sourceColour, colour);
             } else {
-                checkVertical(coordinatesTypeEntry, yLength, needToBeChecked, sourceColour, colour);
-                checkHorizontal(coordinatesTypeEntry, xLength, needToBeChecked, sourceColour, colour);
+                checkVertical(coordinatesTypeEntry, bound, needToBeChecked, sourceColour, colour);
+                checkHorizontal(coordinatesTypeEntry, bound, needToBeChecked, sourceColour, colour);
             }
         }
     }
 
-    protected CoordinatesTypeEntry getAny(List<CoordinatesTypeEntry> needToBeChecked ){
+    protected CoordinatesTypeEntry getAny(List<CoordinatesTypeEntry> needToBeChecked, Bound bound){
         return needToBeChecked.remove(needToBeChecked.size() - 1);
     }
 
-    private void checkHorizontal(CoordinatesTypeEntry coordinatesTypeEntry, int xLength, List<CoordinatesTypeEntry> needToBeChecked, char sourceColour, char colour) {
-        for (int i = coordinatesTypeEntry.x + 1; i <= xLength && model.get(i, coordinatesTypeEntry.y) == sourceColour; i++) {
+    private void checkHorizontal(CoordinatesTypeEntry coordinatesTypeEntry, Bound bound, List<CoordinatesTypeEntry> needToBeChecked, char sourceColour, char colour) {
+        for (int i = coordinatesTypeEntry.x + 1; i <= bound.maxWidth && model.get(i, coordinatesTypeEntry.y) == sourceColour; i++) {
             model.set(i, coordinatesTypeEntry.y, colour);
             needToBeChecked.add(new CoordinatesTypeEntry(i, coordinatesTypeEntry.y, TypeOfFilling.HorizontalOnly));
         }
 
-        for (int i = coordinatesTypeEntry.x - 1; i > 0 && model.get(i, coordinatesTypeEntry.y) == sourceColour; i--) {
+        for (int i = coordinatesTypeEntry.x - 1; i > bound.minWidth && model.get(i, coordinatesTypeEntry.y) == sourceColour; i--) {
             model.set(i, coordinatesTypeEntry.y, colour);
             needToBeChecked.add(new CoordinatesTypeEntry(i, coordinatesTypeEntry.y, TypeOfFilling.HorizontalOnly));
         }
     }
 
-    private void checkVertical(CoordinatesTypeEntry coordinatesTypeEntry, int yLength, List<CoordinatesTypeEntry> needToBeChecked, char sourceColour, char colour) {
-        for (int j = coordinatesTypeEntry.y + 1; j <= yLength && model.get(coordinatesTypeEntry.x, j) == sourceColour; j++) {
+    private void checkVertical(CoordinatesTypeEntry coordinatesTypeEntry,  Bound bound, List<CoordinatesTypeEntry> needToBeChecked, char sourceColour, char colour) {
+        for (int j = coordinatesTypeEntry.y + 1; j <= bound.maxHeight && model.get(coordinatesTypeEntry.x, j) == sourceColour; j++) {
             model.set(coordinatesTypeEntry.x, j, colour);
             needToBeChecked.add(new CoordinatesTypeEntry(coordinatesTypeEntry.x, j, TypeOfFilling.VerticalOnly));
         }
 
-        for (int j = coordinatesTypeEntry.y - 1; j > 0 && model.get(coordinatesTypeEntry.x, j) == sourceColour; j--) {
+        for (int j = coordinatesTypeEntry.y - 1; j > bound.minHeight && model.get(coordinatesTypeEntry.x, j) == sourceColour; j--) {
             model.set(coordinatesTypeEntry.x, j, colour);
             needToBeChecked.add(new CoordinatesTypeEntry(coordinatesTypeEntry.x, j, TypeOfFilling.VerticalOnly));
         }
