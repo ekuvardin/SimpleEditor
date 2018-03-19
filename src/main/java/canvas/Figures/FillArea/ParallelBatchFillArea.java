@@ -17,10 +17,6 @@ public class ParallelBatchFillArea implements IFillArea {
     protected int threadCount;
     protected IBatchFillArea fillArea;
 
-    @Override
-    public void fill(int x, int y, int minWidth, int maxWidth, int minHeight, int maxHeight, char colour) {
-
-    }
 
     public ParallelBatchFillArea(IView view, Model model, int threadCount, int blockSizeW, int blockSizeH, IBatchFillArea fillArea) {
         this.view = view;
@@ -28,18 +24,37 @@ public class ParallelBatchFillArea implements IFillArea {
         this.blockSizeW = blockSizeW;
         this.blockSizeH = blockSizeH;
         this.fillArea = fillArea;
+        this.model = model;
+    }
+
+    @Override
+    public void fill(int x, int y, int minWidth, int maxWidth, int minHeight, int maxHeight, char colour) {
+        try {
+            MergeReducer mergeReducer = new MergeReducer(null, List.of(y * (maxWidth - minWidth) + x));
+            new ForkJoinPool(threadCount).invoke(mergeReducer);
+            mergeReducer.get();
+        } catch (InterruptedException | ExecutionException e) {
+            e.printStackTrace();
+            throw new RuntimeException(e);
+        }
+    }
+
+    private Bound getBlockBorder(Integer value, Bound mainBorder){
+        int y = value/(mainBorder.maxHeight - mainBorder.minHeight);
+        int x = value - y*(mainBorder.maxHeight - mainBorder.minHeight);
+
+        int widthDelta = x/blockSizeW;
+        return new Bound();
     }
 
     class MergeReducer extends CountedCompleter<BorderPoints> {
 
-        private List<MergeReducer> forks;
         private BorderPoints result;
         private List<Integer> startPoints;
 
-        private MergeReducer(CountedCompleter<String> parent, List<Integer> startPoints) {
+        private MergeReducer(CountedCompleter<BorderPoints> parent, List<Integer> startPoints) {
             super(parent);
             this.startPoints = startPoints;
-            this.forks = new ArrayList<>(maxChunkInTask);
         }
 
         @Override
@@ -51,48 +66,32 @@ public class ParallelBatchFillArea implements IFillArea {
         public void compute() {
             BorderPoints borderPoints = fillArea.fill();
 
-            if()
-            final int size = fileNames.size();
-            if (size <= maxFileInTask) {
-                result = execMerge(fileNames, outputFileName);
-            } else {
-                int delta = size / maxFileInTask;
-                if (delta <= maxFileInTask) {
-                    delta = maxFileInTask;
-                }
-
-                for (int newSize = delta; newSize < size; newSize = newSize + delta) {
-                    addTask(fileNames.subList(newSize - delta, newSize));
-                }
-
-                int rem = size % maxFileInTask;
-                // If we have only one file then we can't do anything.
-                if (rem != 1) {
-                    addTask(rem == 0 ? fileNames.subList(size - delta, size) : fileNames.subList(size - rem, size));
-                } else {
-                    result = fileNames.get(size - 1);
-                    forks.add(this);
-                }
+            if (borderPoints.bottom.size() != 0) {
+                this.addToPendingCount(1);
+                MergeReducer mapReducer = new MergeReducer(this, borderPoints.bottom);
+                mapReducer.fork();
             }
+
+            if (borderPoints.top.size() != 0) {
+                this.addToPendingCount(1);
+                MergeReducer mapReducer = new MergeReducer(this, borderPoints.top);
+                mapReducer.fork();
+            }
+
+            if (borderPoints.left.size() != 0) {
+                this.addToPendingCount(1);
+                MergeReducer mapReducer = new MergeReducer(this, borderPoints.left);
+                mapReducer.fork();
+            }
+
+            if (borderPoints.right.size() != 0) {
+                this.addToPendingCount(1);
+                MergeReducer mapReducer = new MergeReducer(this, borderPoints.right);
+                mapReducer.fork();
+            }
+
 
             tryComplete();
-        }
-
-        private void addTask(List<String> fileTmp) {
-            this.addToPendingCount(1);
-            MergeReducer mapReducer = new MergeReducer(this, fileTmp, maxFileInTask, outputFileName);
-            mapReducer.fork();
-            forks.add(mapReducer);
-        }
-
-        private String execMerge(List<String> fileNames, String outputFileName) {
-            try {
-                return kWayMerge(fileNames, FileNamesHolder.getNewUniqueName(outputFileName));
-            } catch (IOException e) {
-                e.printStackTrace();
-                this.cancel(true);
-                return null;
-            }
         }
     }
 
