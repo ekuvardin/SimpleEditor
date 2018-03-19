@@ -7,29 +7,27 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.*;
-import java.util.stream.Collectors;
 
-public class ParallelBatchFillArea extends SingleThreadFillArea {
+public class ParallelBatchFillArea implements IFillArea {
 
     protected Model model;
     protected IView view;
     protected int blockSizeW;
     protected int blockSizeH;
-    int threadCount;
+    protected int threadCount;
+    protected IBatchFillArea fillArea;
 
-    private static class BorderPoints {
-        List<Integer> left = new ArrayList<Integer>();
-        List<Integer> right = new ArrayList<Integer>();
-        List<Integer> bottom = new ArrayList<Integer>();
-        List<Integer> top = new ArrayList<Integer>();
+    @Override
+    public void fill(int x, int y, int minWidth, int maxWidth, int minHeight, int maxHeight, char colour) {
+
     }
 
-    public ParallelBatchFillArea(IView view, Model model, int threadCount, int blockSizeW, int blockSizeH) {
-        super(model);
+    public ParallelBatchFillArea(IView view, Model model, int threadCount, int blockSizeW, int blockSizeH, IBatchFillArea fillArea) {
         this.view = view;
         this.threadCount = threadCount;
         this.blockSizeW = blockSizeW;
         this.blockSizeH = blockSizeH;
+        this.fillArea = fillArea;
     }
 
     class MergeReducer extends CountedCompleter<BorderPoints> {
@@ -51,8 +49,9 @@ public class ParallelBatchFillArea extends SingleThreadFillArea {
 
         @Override
         public void compute() {
-            fill();
+            BorderPoints borderPoints = fillArea.fill();
 
+            if()
             final int size = fileNames.size();
             if (size <= maxFileInTask) {
                 result = execMerge(fileNames, outputFileName);
@@ -97,23 +96,5 @@ public class ParallelBatchFillArea extends SingleThreadFillArea {
         }
     }
 
-    @Override
-    protected CoordinatesTypeEntry getAny(List<CoordinatesTypeEntry> needToBeChecked, Bound bound) {
-        CoordinatesTypeEntry value = needToBeChecked.remove(needToBeChecked.size() - 1);
-
-        if (value.x == bound.minWidth) {
-            borderPoints.get().add((value.y - 1) * model.getWidth() + value.x);
-        }
-        if (value.x == bound.maxWidth) {
-            borderPoints.get().add((value.y + 1) * model.getWidth() + value.x);
-        }
-        if (value.x == bound.minHeight) {
-            borderPoints.get().add(value.y * model.getWidth() + value.x - 1);
-        }
-        if (value.x == bound.maxHeight) {
-            borderPoints.get().add(value.y * model.getWidth() + value.x + 1);
-        }
-        return value;
-    }
 
 }
