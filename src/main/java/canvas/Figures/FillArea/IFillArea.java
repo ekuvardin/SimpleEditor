@@ -5,6 +5,6 @@ package canvas.Figures.FillArea;
  */
 public interface IFillArea {
 
-    void fill(int x, int y, int minWidth, int maxWidth, int minHeight, int maxHeight, char colour);
+    void fill(int x, int y, Boundary boundary, char colour);
 
 }

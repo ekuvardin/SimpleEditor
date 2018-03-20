@@ -1,12 +1,12 @@
 package canvas.Figures.FillArea;
 
 /**
- * Bound area description
+ * Boundary area description
  */
-public class Bound {
+public class Boundary {
     protected int minWidth, maxWidth, minHeight, maxHeight;
 
-    public Bound(int minWidth, int maxWidth, int minHeight, int maxHeight) {
+    public Boundary(int minWidth, int maxWidth, int minHeight, int maxHeight) {
         this.minWidth = minWidth;
         this.maxWidth = maxWidth;
         this.minHeight = minHeight;

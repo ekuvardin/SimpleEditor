@@ -3,8 +3,6 @@ package canvas.Figures.FillArea;
 import canvas.Model;
 import canvas.Viewer.IView;
 
-import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.*;
 
@@ -28,9 +26,9 @@ public class ParallelBatchFillArea implements IFillArea {
     }
 
     @Override
-    public void fill(int x, int y, int minWidth, int maxWidth, int minHeight, int maxHeight, char colour) {
+    public void fill(int x, int y, Boundary boundary, char colour) {
         try {
-            MergeReducer mergeReducer = new MergeReducer(null, List.of(y * (maxWidth - minWidth) + x));
+            MergeReducer mergeReducer = new MergeReducer(null, List.of(y * (boundary.maxWidth - boundary.minWidth) + x), boundary, colour);
             new ForkJoinPool(threadCount).invoke(mergeReducer);
             mergeReducer.get();
         } catch (InterruptedException | ExecutionException e) {
@@ -39,61 +37,58 @@ public class ParallelBatchFillArea implements IFillArea {
         }
     }
 
-    private Bound getBlockBorder(Integer value, Bound mainBorder){
-        int y = value/(mainBorder.maxHeight - mainBorder.minHeight);
-        int x = value - y*(mainBorder.maxHeight - mainBorder.minHeight);
+    class MergeReducer extends CountedCompleter<Void> {
 
-        int widthDelta = x/blockSizeW;
-        return new Bound();
-    }
-
-    class MergeReducer extends CountedCompleter<BorderPoints> {
-
-        private BorderPoints result;
         private List<Integer> startPoints;
+        private Boundary mainBorder;
+        private char colour;
 
-        private MergeReducer(CountedCompleter<BorderPoints> parent, List<Integer> startPoints) {
+        private MergeReducer(CountedCompleter<Void> parent, List<Integer> startPoints, Boundary mainBorder, char colour) {
             super(parent);
             this.startPoints = startPoints;
+            this.mainBorder = mainBorder;
+            this.colour = colour;
         }
 
-        @Override
-        public BorderPoints getRawResult() {
-            return result;
+        private Boundary getBlockBorder(int x, int y) {
+            int minWidth = x / blockSizeW;
+            int minHeight = y / blockSizeH;
+            return new Boundary(minWidth, Math.min(minWidth + blockSizeW, mainBorder.maxWidth), minHeight, Math.max(minHeight + blockSizeH, mainBorder.maxHeight));
         }
 
         @Override
         public void compute() {
-            BorderPoints borderPoints = fillArea.fill();
+            int value = startPoints.get(0);
+            int y = value / mainBorder.maxWidth;
+            int x = value - y * mainBorder.maxWidth;
+
+            BorderPoints borderPoints = fillArea.fill(x, y, getBlockBorder(x, y), colour);
 
             if (borderPoints.bottom.size() != 0) {
                 this.addToPendingCount(1);
-                MergeReducer mapReducer = new MergeReducer(this, borderPoints.bottom);
+                MergeReducer mapReducer = new MergeReducer(this, borderPoints.bottom, mainBorder, colour);
                 mapReducer.fork();
             }
 
             if (borderPoints.top.size() != 0) {
                 this.addToPendingCount(1);
-                MergeReducer mapReducer = new MergeReducer(this, borderPoints.top);
+                MergeReducer mapReducer = new MergeReducer(this, borderPoints.top, mainBorder, colour);
                 mapReducer.fork();
             }
 
             if (borderPoints.left.size() != 0) {
                 this.addToPendingCount(1);
-                MergeReducer mapReducer = new MergeReducer(this, borderPoints.left);
+                MergeReducer mapReducer = new MergeReducer(this, borderPoints.left, mainBorder, colour);
                 mapReducer.fork();
             }
 
             if (borderPoints.right.size() != 0) {
                 this.addToPendingCount(1);
-                MergeReducer mapReducer = new MergeReducer(this, borderPoints.right);
+                MergeReducer mapReducer = new MergeReducer(this, borderPoints.right, mainBorder, colour);
                 mapReducer.fork();
             }
-
 
             tryComplete();
         }
     }
-
-
 }
