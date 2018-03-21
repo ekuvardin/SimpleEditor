@@ -62,7 +62,7 @@ public class ParallelBatchFillArea implements IFillArea {
             int y = value / mainBorder.maxWidth;
             int x = value - y * mainBorder.maxWidth;
 
-            BorderPoints borderPoints = fillArea.fill(x, y, getBlockBorder(x, y), colour);
+            BorderPoints borderPoints = fillArea.fill(startPoints, getBlockBorder(x, y), colour);
 
             if (borderPoints.bottom.size() != 0) {
                 this.addToPendingCount(1);

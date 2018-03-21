@@ -17,34 +17,39 @@ public class BatchSingleThreadFillArea implements IBatchFillArea {
     }
 
     @Override
-    public BorderPoints fill(int x, int y, int minWidth, int maxWidth, int minHeight, int maxHeight, char colour) {
+    public BorderPoints fill(List<Integer> startPoints, Boundary boundary, char colour) {
         BorderPoints borderPoints = new BorderPoints();
-        char sourceColour = model.get(x, y);
-        Boundary boundary = new Boundary(minWidth, maxWidth, minHeight, maxHeight);
 
-        if (sourceColour != colour) {
 
-            int xLength = model.getWidth();
-            int yLength = model.getHeight();
+        int xLength = model.getWidth();
+        int yLength = model.getHeight();
 
-            List<CoordinatesTypeEntry> needToBeChecked = new ArrayList<>((xLength + yLength) * 2);
+        List<CoordinatesTypeEntry> needToBeChecked = new ArrayList<>((xLength + yLength) * 2);
 
-            needToBeChecked.add(new CoordinatesTypeEntry(x, y));
-            model.set(x, y, colour);
+        for (Integer value : startPoints) {
+            int y = value / xLength;
+            int x = value - y * xLength;
 
-            while (!needToBeChecked.isEmpty()) {
-                CoordinatesTypeEntry coordinatesTypeEntry = getAny(needToBeChecked, boundary, borderPoints);
-
-                if (coordinatesTypeEntry.typeOfFilling == TypeOfFilling.HorizontalOnly) {
-                    checkVertical(coordinatesTypeEntry, boundary, needToBeChecked, sourceColour, colour);
-                } else if (coordinatesTypeEntry.typeOfFilling == TypeOfFilling.VerticalOnly) {
-                    checkHorizontal(coordinatesTypeEntry, boundary, needToBeChecked, sourceColour, colour);
-                } else {
-                    checkVertical(coordinatesTypeEntry, boundary, needToBeChecked, sourceColour, colour);
-                    checkHorizontal(coordinatesTypeEntry, boundary, needToBeChecked, sourceColour, colour);
-                }
+            char sourceColour = model.get(x, y);
+            if (sourceColour != colour) {
+                needToBeChecked.add(new CoordinatesTypeEntry(x, y));
+                model.set(x, y, colour);
             }
         }
+
+        while (!needToBeChecked.isEmpty()) {
+            CoordinatesTypeEntry coordinatesTypeEntry = getAny(needToBeChecked, boundary, borderPoints);
+
+            if (coordinatesTypeEntry.typeOfFilling == TypeOfFilling.HorizontalOnly) {
+                checkVertical(coordinatesTypeEntry, boundary, needToBeChecked, sourceColour, colour);
+            } else if (coordinatesTypeEntry.typeOfFilling == TypeOfFilling.VerticalOnly) {
+                checkHorizontal(coordinatesTypeEntry, boundary, needToBeChecked, sourceColour, colour);
+            } else {
+                checkVertical(coordinatesTypeEntry, boundary, needToBeChecked, sourceColour, colour);
+                checkHorizontal(coordinatesTypeEntry, boundary, needToBeChecked, sourceColour, colour);
+            }
+        }
+
         return borderPoints;
     }
 

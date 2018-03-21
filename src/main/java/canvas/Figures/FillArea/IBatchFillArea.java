@@ -1,6 +1,8 @@
 package canvas.Figures.FillArea;
 
+import java.util.List;
+
 public interface IBatchFillArea {
 
-    BorderPoints fill(int x, int y, Boundary boundary, char colour);
+    BorderPoints fill(List<Integer> startPoints, Boundary boundary, char colour);
 }
