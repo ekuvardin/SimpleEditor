@@ -17,7 +17,7 @@ public class BatchSingleThreadFillArea implements IBatchFillArea {
     }
 
     @Override
-    public BorderPoints fill(List<Integer> startPoints, Boundary boundary, char colour) {
+    public BorderPoints fill(List<Integer> startPoints, Boundary boundary, char sourceColour, char colour) {
         BorderPoints borderPoints = new BorderPoints();
 
 
@@ -30,8 +30,7 @@ public class BatchSingleThreadFillArea implements IBatchFillArea {
             int y = value / xLength;
             int x = value - y * xLength;
 
-            char sourceColour = model.get(x, y);
-            if (sourceColour != colour) {
+            if (sourceColour == model.get(x, y)) {
                 needToBeChecked.add(new CoordinatesTypeEntry(x, y));
                 model.set(x, y, colour);
             }

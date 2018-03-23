@@ -4,5 +4,5 @@ import java.util.List;
 
 public interface IBatchFillArea {
 
-    BorderPoints fill(List<Integer> startPoints, Boundary boundary, char colour);
+    BorderPoints fill(List<Integer> startPoints, Boundary boundary, char sourceColour, char colour);
 }

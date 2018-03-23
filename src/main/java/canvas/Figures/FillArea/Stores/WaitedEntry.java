@@ -10,22 +10,46 @@ import java.util.concurrent.locks.ReentrantLock;
 
 public class WaitedEntry<T> {
 
-    T entry;
-    ReentrantLock currentLock;
-    Condition notFull;
+    final T entry;
+    final ReentrantLock currentLock;
+    final Condition notFull;
 
-    public WaitedEntry(){
+    public WaitedEntry(T entry){
         currentLock = new ReentrantLock();
         notFull = currentLock.newCondition();
+        this.entry = entry;
     }
 
-    public void tryPut(){
+    public void tryWait() throws InterruptedException {
         try{
             currentLock.tryLock();
-            Set<Boundary> boundarySet = ConcurrentHashMap.newKeySet();
-            boundarySet.add()
+            notFull.wait();
         } finally {
             currentLock.unlock();
         }
+    }
+
+    public void release(){
+        try{
+            currentLock.tryLock();
+            notFull.signalAll();
+        } finally {
+            currentLock.unlock();
+        }
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        WaitedEntry<?> that = (WaitedEntry<?>) o;
+
+        return entry != null ? entry.equals(that.entry) : that.entry == null;
+    }
+
+    @Override
+    public int hashCode() {
+        return entry != null ? entry.hashCode() : 0;
     }
 }

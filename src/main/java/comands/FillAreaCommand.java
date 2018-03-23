@@ -1,5 +1,7 @@
 package comands;
 
+import canvas.Figures.FillArea.Boundary;
+import canvas.Figures.FillArea.IFillArea;
 import canvas.Model;
 import canvas.Viewer.IView;
 import canvas.Figures.FillArea.SingleThreadFillArea;
@@ -21,7 +23,9 @@ public class FillAreaCommand implements ICommand {
 
     @Override
     public void execute(IView view) {
-        SingleThreadFillArea.fill(Model.getCurrentModel(), x, y, colour);
+        Model model = Model.getCurrentModel();
+        IFillArea fillArea = new SingleThreadFillArea(Model.getCurrentModel());
+        fillArea.fill(x, y, new Boundary(0,model.getWidth(), 0, model.getHeight()), colour);
 
         view.draw(Model.getCurrentModel());
     }
