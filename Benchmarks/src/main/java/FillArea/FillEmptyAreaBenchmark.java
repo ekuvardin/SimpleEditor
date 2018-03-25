@@ -1,11 +1,10 @@
 package FillArea;
 
-import canvas.ConcurrentModel;
-import canvas.Figures.FillArea.ConcurrentFillArea;
-import canvas.Figures.FillArea.IFillArea;
-import canvas.Figures.FillArea.SingleThreadFillArea;
+import canvas.Figures.FillArea.*;
 import canvas.Model;
 import canvas.SimpleModel;
+import canvas.Viewer.ConsoleViewer;
+import canvas.Viewer.IView;
 import org.openjdk.jmh.annotations.*;
 import org.openjdk.jmh.runner.Runner;
 import org.openjdk.jmh.runner.RunnerException;
@@ -16,7 +15,16 @@ import org.openjdk.jmh.runner.options.TimeValue;
 import java.util.concurrent.TimeUnit;
 
 
+/*
+
+Benchmark                                                  Mode  Cnt   Score   Error  Units
+FillArea.FillEmptyAreaBenchmark.MultipleThreadFilling.put  avgt    5   9,233 ± 3,001  ns/op
+FillArea.FillEmptyAreaBenchmark.SingleThreadFilling.put    avgt    5  15,580 ± 5,009  ns/op
+ */
 public class FillEmptyAreaBenchmark {
+
+    static int width = 1024;
+    static int height = 1024;
 
     @State(Scope.Benchmark)
     @BenchmarkMode(Mode.AverageTime)
@@ -28,15 +36,17 @@ public class FillEmptyAreaBenchmark {
     public static class SingleThreadFilling {
 
         private Model model;
+        private IFillArea fillArea;
 
         @Setup(Level.Iteration)
         public void preSetup() throws InterruptedException {
-            model = new SimpleModel(4048, 4048);
+            model = new SimpleModel(width, height);
+            fillArea = new SingleThreadFillArea(model);
         }
 
         @Benchmark
         public void put() throws InterruptedException {
-            SingleThreadFillArea.fill(model, 1, 1, 'y');
+            fillArea.fill(1, 1, new Boundary(1, width, 1, height), 'y');
         }
     }
 
@@ -50,16 +60,18 @@ public class FillEmptyAreaBenchmark {
     public static class MultipleThreadFilling {
 
         private Model model;
-        IFillArea fillArea;
+        private IFillArea fillArea;
+        private IView view = new ConsoleViewer();
 
         @Setup(Level.Iteration)
         public void preSetup() throws InterruptedException {
-            model = new ConcurrentModel(4048, 4048);
+            model = new SimpleModel(width, height);
+            fillArea = new ParallelBatchFillArea(view, model, 4, 64, 64, new BatchSingleThreadFillArea(model));
         }
 
         @Benchmark
         public void put() throws InterruptedException {
-            ConcurrentFillArea.fill(model, 2024, 2024, 'y', 16);
+            fillArea.fill(1, 1, new Boundary(1, width, 1, height), 'y');
         }
     }
 

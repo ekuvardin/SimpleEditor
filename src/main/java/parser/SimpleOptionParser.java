@@ -25,8 +25,6 @@ public class SimpleOptionParser implements IConsoleParser {
                 return parseL(args);
             case "R":
                 return parseR(args);
-            case "CN":
-                return parseCN(args);
             case "BN":
                 return parseBN(args);
         }
@@ -54,8 +52,7 @@ public class SimpleOptionParser implements IConsoleParser {
             x = parseCoordinate(args[1]);
             y = parseCoordinate(args[2]);
             colour = parseColour(args[3]);
-        }
-        catch(ParseException e){
+        } catch (ParseException e) {
             return new ErrorCommand(e.getMessage());
         }
 
@@ -63,24 +60,26 @@ public class SimpleOptionParser implements IConsoleParser {
     }
 
     private ICommand parseBN(String[] args) {
-        if (args.length > 5)
-            return new ErrorCommand("Unknown options after BN command " + Arrays.toString(Arrays.copyOfRange(args, 4, args.length)));
+        if (args.length > 7)
+            return new ErrorCommand("Unknown options after BN command " + Arrays.toString(Arrays.copyOfRange(args, 7, args.length)));
 
-        if (args.length < 5)
+        if (args.length < 7)
             return new ErrorCommand("Not enough args for BN command");
 
-        int x, y, threadCount;
+        int x, y, threadCount, widthBatchSize, heightBatchSize;
         char colour;
         try {
             x = parseCoordinate(args[1]);
             y = parseCoordinate(args[2]);
             colour = parseColour(args[3]);
-            threadCount= parseThreadCount(args[4]);
-        } catch(ParseException e){
+            threadCount = parseThreadCount(args[4]);
+            widthBatchSize = parseCoordinate(args[5]);
+            heightBatchSize = parseCoordinate(args[6]);
+        } catch (ParseException e) {
             return new ErrorCommand(e.getMessage());
         }
 
-        return new FillConcurrentAreaCommand(x, y, colour, threadCount);
+        return new FillParallelAreaCommand(x, y, colour, threadCount, widthBatchSize, heightBatchSize);
     }
 
     private ICommand parseC(String[] args) {
@@ -99,24 +98,6 @@ public class SimpleOptionParser implements IConsoleParser {
         }
 
         return new CreateCanvasCommand(w, h);
-    }
-
-    private ICommand parseCN(String[] args) {
-        if (args.length > 3)
-            return new ErrorCommand("Unknown options after CN command " + Arrays.toString(Arrays.copyOfRange(args, 3, args.length)));
-
-        if (args.length < 3)
-            return new ErrorCommand("Not enough args for CN command");
-
-        int w, h;
-        try {
-            w = parseCoordinate(args[1]);
-            h = parseCoordinate(args[2]);
-        } catch (ParseException e) {
-            return new ErrorCommand(e.getMessage());
-        }
-
-        return new CreateConcurrentCanvasCommand(w, h);
     }
 
     private ICommand parseL(String[] args) {
@@ -159,20 +140,20 @@ public class SimpleOptionParser implements IConsoleParser {
         return new CreateRectangleCommand(x1, y1, x2, y2);
     }
 
-    private static class ParseException extends Exception{
+    private static class ParseException extends Exception {
 
-        ParseException(String message){
+        ParseException(String message) {
             super(message);
         }
     }
 
     private int parseCoordinate(String param) throws ParseException {
-        return parseCoordinate(param,"X,Y coordinates" );
+        return parseCoordinate(param, "X,Y coordinates");
     }
 
 
     private int parseThreadCount(String param) throws ParseException {
-        return parseCoordinate(param,"Thread count" );
+        return parseCoordinate(param, "Thread count");
     }
 
     private int parseCoordinate(String param, String prefix) throws ParseException {
@@ -180,7 +161,7 @@ public class SimpleOptionParser implements IConsoleParser {
         try {
             coord = Integer.parseInt(param);
         } catch (NumberFormatException e) {
-            throw  new ParseException(String.format("%s should be integer", prefix));
+            throw new ParseException(String.format("%s should be integer", prefix));
         }
         if (coord <= 0) {
             throw new ParseException(String.format("%s should be positive", prefix));
@@ -189,7 +170,7 @@ public class SimpleOptionParser implements IConsoleParser {
     }
 
     private char parseColour(String param) throws ParseException {
-        if (param.length() > 1 ||param.charAt(0) < 97 && param.charAt(0) > 122) {
+        if (param.length() > 1 || param.charAt(0) < 97 && param.charAt(0) > 122) {
             throw new ParseException(String.format("Unknown colour %s, colour must be in range 'a', ... ,'z'", param.charAt(0)));
         }
         return param.charAt(0);

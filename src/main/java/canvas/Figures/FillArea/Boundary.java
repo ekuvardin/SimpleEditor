@@ -21,6 +21,6 @@ public class Boundary {
      * @return true - provided values within bounds, false - other
      */
     public boolean checkInBound(int width, int height) {
-        return width >= minWidth && width < maxWidth && height >= minHeight && height < maxHeight;
+        return width >= minWidth && width <= maxWidth && height >= minHeight && height <= maxHeight;
     }
 }

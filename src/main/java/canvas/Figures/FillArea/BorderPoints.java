@@ -4,8 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class BorderPoints {
-    List<Integer> left = new ArrayList<Integer>();
-    List<Integer> right = new ArrayList<Integer>();
-    List<Integer> bottom = new ArrayList<Integer>();
-    List<Integer> top = new ArrayList<Integer>();
+    List<CoordinatesTypeEntry> left = new ArrayList<>();
+    List<CoordinatesTypeEntry> right = new ArrayList<>();
+    List<CoordinatesTypeEntry> bottom = new ArrayList<>();
+    List<CoordinatesTypeEntry> top = new ArrayList<>();
 }

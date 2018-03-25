@@ -25,7 +25,7 @@ public class FillAreaCommand implements ICommand {
     public void execute(IView view) {
         Model model = Model.getCurrentModel();
         IFillArea fillArea = new SingleThreadFillArea(Model.getCurrentModel());
-        fillArea.fill(x, y, new Boundary(0,model.getWidth(), 0, model.getHeight()), colour);
+        fillArea.fill(x, y, new Boundary(1,model.getWidth(), 1, model.getHeight()), colour);
 
         view.draw(Model.getCurrentModel());
     }

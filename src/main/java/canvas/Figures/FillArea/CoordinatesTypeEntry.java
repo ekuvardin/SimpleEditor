@@ -3,17 +3,21 @@ package canvas.Figures.FillArea;
 /**
  * Describe point to handling + in which direction it has already been handled
  */
-public class CoordinatesTypeEntry extends CoordinatesEntry {
+public class CoordinatesTypeEntry {
 
     TypeOfFilling typeOfFilling;
+    int x;
+    int y;
 
     public CoordinatesTypeEntry(int x, int y) {
-        super(x, y);
+        this.x = x;
+        this.y = y;
         typeOfFilling = TypeOfFilling.AllDirections;
     }
 
     CoordinatesTypeEntry(int x, int y, TypeOfFilling typeOfFilling) {
-        super(x, y);
+        this.x = x;
+        this.y = y;
         this.typeOfFilling = typeOfFilling;
     }
 

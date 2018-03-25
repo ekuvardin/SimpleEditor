@@ -1,27 +1,20 @@
 package intergrationTest.ConsoleViewTest;
 
-import canvas.Model;
-import canvas.ConcurrentModel;
-import comands.CreateLineCommand;
-import comands.CreateRectangleCommand;
-import comands.FillConcurrentAreaCommand;
-import comands.ICommand;
+import canvas.Figures.FillArea.BatchSingleThreadFillArea;
+import canvas.Figures.FillArea.ParallelBatchFillArea;
+import canvas.SimpleModel;
+import comands.*;
 import org.junit.Test;
 
 import java.io.IOException;
 
-public class ConcurrentModelTest extends CommonModelTests {
+public class ParallelFillAreaCommandTest extends CommonModelTests {
 
-    @Override
-    public Model createCanvas(int x, int y) {
-        return new ConcurrentModel(x, y);
-    }
-
-    @Test(timeout = 10000)
+    @Test(timeout = 10000000)
     public void consoleShouldFillCanvasInConcurrentInOneThread() throws IOException {
         model = createCanvas(4, 4);
         CreateRectangleCommand createLineCommand = new CreateRectangleCommand(1, 1, 3, 3);
-        ICommand command =  new FillConcurrentAreaCommand(4, 1, 'y', 1);
+        ICommand command =  new FillParallelAreaCommand(4, 1, 'y', 1 , 2 , 2);
         createLineCommand.execute(view);
 
         String expected =
@@ -39,7 +32,7 @@ public class ConcurrentModelTest extends CommonModelTests {
     public void consoleShouldFillCanvasInConcurrentInSeveralThreads() throws IOException {
         model = createCanvas(8, 8);
         CreateRectangleCommand createLineCommand = new CreateRectangleCommand(1, 1, 3, 3);
-        ICommand command =  new FillConcurrentAreaCommand(4, 1, 'y', 4);
+        ICommand command =  new FillParallelAreaCommand(4, 1, 'y', 2 , 2 , 2);
         createLineCommand.execute(view);
 
         String expected =
@@ -63,7 +56,7 @@ public class ConcurrentModelTest extends CommonModelTests {
         CreateRectangleCommand createRectangleCommand = new CreateRectangleCommand(1, 1, 3, 3);
         CreateLineCommand createLineCommand = new CreateLineCommand(6, 2, 6, 8);
         CreateLineCommand createLineCommand2 = new CreateLineCommand(4, 5, 5, 5);
-        ICommand command =  new FillConcurrentAreaCommand(4, 1, 'y', 4);
+        ICommand command =  new FillParallelAreaCommand(4, 1, 'y', 4, 2, 2);
         createRectangleCommand.execute(view);
         createLineCommand.execute(view);
         createLineCommand2.execute(view);
@@ -82,4 +75,23 @@ public class ConcurrentModelTest extends CommonModelTests {
 
         checkResult(command, expected);
     }
+
+    @Test
+    public void consoleShouldFillCanvas() throws IOException {
+        model = createCanvas(256, 256);
+        ICommand command =  new FillParallelAreaCommand(1, 1, 'y',4,64,64);
+       // fillArea = new ParallelBatchFillArea(view, model, 1,256,256,  new BatchSingleThreadFillArea(model));
+        command.execute(view);
+
+     /*   String expected =
+                "------" + "\r\n" +
+                        "|xxxy|" + "\r\n" +
+                        "|x xy|" + "\r\n" +
+                        "|xxxy|" + "\r\n" +
+                        "|yyyy|" + "\r\n" +
+                        "------" + "\r\n";
+
+        checkResult(command, expected);*/
+    }
+
 }

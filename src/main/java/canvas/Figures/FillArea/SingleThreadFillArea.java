@@ -51,7 +51,7 @@ public class SingleThreadFillArea implements IFillArea {
             needToBeChecked.add(new CoordinatesTypeEntry(i, coordinatesTypeEntry.y, TypeOfFilling.HorizontalOnly));
         }
 
-        for (int i = coordinatesTypeEntry.x - 1; i > boundary.minWidth && model.get(i, coordinatesTypeEntry.y) == sourceColour; i--) {
+        for (int i = coordinatesTypeEntry.x - 1; i >= boundary.minWidth && model.get(i, coordinatesTypeEntry.y) == sourceColour; i--) {
             model.set(i, coordinatesTypeEntry.y, colour);
             needToBeChecked.add(new CoordinatesTypeEntry(i, coordinatesTypeEntry.y, TypeOfFilling.HorizontalOnly));
         }
@@ -63,7 +63,7 @@ public class SingleThreadFillArea implements IFillArea {
             needToBeChecked.add(new CoordinatesTypeEntry(coordinatesTypeEntry.x, j, TypeOfFilling.VerticalOnly));
         }
 
-        for (int j = coordinatesTypeEntry.y - 1; j > boundary.minHeight && model.get(coordinatesTypeEntry.x, j) == sourceColour; j--) {
+        for (int j = coordinatesTypeEntry.y - 1; j >= boundary.minHeight && model.get(coordinatesTypeEntry.x, j) == sourceColour; j--) {
             model.set(coordinatesTypeEntry.x, j, colour);
             needToBeChecked.add(new CoordinatesTypeEntry(coordinatesTypeEntry.x, j, TypeOfFilling.VerticalOnly));
         }

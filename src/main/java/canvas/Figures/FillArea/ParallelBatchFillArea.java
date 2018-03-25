@@ -30,10 +30,10 @@ public class ParallelBatchFillArea implements IFillArea {
 
     @Override
     public void fill(int x, int y, Boundary boundary, char colour) {
-        if(model.get(x, y) != colour) {
+        if (model.get(x, y) != colour) {
             try {
 
-                MergeReducer mergeReducer = new MergeReducer(null, List.of(y * (boundary.maxWidth - boundary.minWidth) + x), boundary, model.get(x, y), colour);
+                MergeReducer mergeReducer = new MergeReducer(null, List.of(new CoordinatesTypeEntry(x, y)), boundary, model.get(x, y), colour);
                 new ForkJoinPool(threadCount).invoke(mergeReducer);
                 mergeReducer.get();
             } catch (InterruptedException | ExecutionException e) {
@@ -63,12 +63,12 @@ public class ParallelBatchFillArea implements IFillArea {
 
     class MergeReducer extends CountedCompleter<Void> {
 
-        private List<Integer> startPoints;
+        private List<CoordinatesTypeEntry> startPoints;
         private Boundary mainBorder;
         private char colour;
         private char sourceColour;
 
-        private MergeReducer(CountedCompleter<Void> parent, List<Integer> startPoints, Boundary mainBorder, char sourceColour, char colour) {
+        private MergeReducer(CountedCompleter<Void> parent, List<CoordinatesTypeEntry> startPoints, Boundary mainBorder, char sourceColour, char colour) {
             super(parent);
             this.startPoints = startPoints;
             this.mainBorder = mainBorder;
@@ -77,22 +77,26 @@ public class ParallelBatchFillArea implements IFillArea {
         }
 
         private Boundary getBlockBorder(int x, int y) {
-            int minWidth = x / blockSizeW;
-            int minHeight = y / blockSizeH;
-            return new Boundary(minWidth, Math.min(minWidth + blockSizeW, mainBorder.maxWidth), minHeight, Math.max(minHeight + blockSizeH, mainBorder.maxHeight));
+            int minWidth = (x - 1) / blockSizeW;
+            int minHeight = (y -1) / blockSizeH;
+            return new Boundary(minWidth * blockSizeW+1,
+                    Math.min((minWidth + 1) * blockSizeW, mainBorder.maxWidth),
+                    minHeight * blockSizeH+1,
+                    Math.min((minHeight + 1) * blockSizeH, mainBorder.maxHeight));
+
         }
 
         @Override
         public void compute() {
-            int value = startPoints.get(0);
-            int y = value / mainBorder.maxWidth;
-            int x = value - y * mainBorder.maxWidth;
+            CoordinatesTypeEntry value = startPoints.get(0);
+            //  int y = value / mainBorder.maxWidth;
+            // int x = value - (y -1)* (mainBorder.maxWidth);
 
-            Boundary boundary = getBlockBorder(x, y);
+            Boundary boundary = getBlockBorder(value.x, value.y);
             BorderPoints borderPoints;
             try {
                 tryLock(boundary);
-                borderPoints = fillArea.fill(startPoints, boundary, sourceColour, colour);
+                borderPoints = fillArea.fill(startPoints, boundary, mainBorder, sourceColour, colour);
             } catch (InterruptedException e) {
                 e.printStackTrace();
                 throw new RuntimeException(e);

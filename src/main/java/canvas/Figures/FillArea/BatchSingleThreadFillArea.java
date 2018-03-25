@@ -17,27 +17,23 @@ public class BatchSingleThreadFillArea implements IBatchFillArea {
     }
 
     @Override
-    public BorderPoints fill(List<Integer> startPoints, Boundary boundary, char sourceColour, char colour) {
+    public BorderPoints fill(List<CoordinatesTypeEntry> startPoints, Boundary boundary, Boundary mainBorder, char sourceColour, char colour) {
         BorderPoints borderPoints = new BorderPoints();
-
 
         int xLength = model.getWidth();
         int yLength = model.getHeight();
 
         List<CoordinatesTypeEntry> needToBeChecked = new ArrayList<>((xLength + yLength) * 2);
 
-        for (Integer value : startPoints) {
-            int y = value / xLength;
-            int x = value - y * xLength;
-
-            if (sourceColour == model.get(x, y)) {
-                needToBeChecked.add(new CoordinatesTypeEntry(x, y));
-                model.set(x, y, colour);
+        for (CoordinatesTypeEntry value : startPoints) {
+            if (mainBorder.checkInBound(value.x, value.y) && sourceColour == model.get(value.x, value.y)) {
+                needToBeChecked.add(value);
+                model.set(value.x, value.y, colour);
             }
         }
 
         while (!needToBeChecked.isEmpty()) {
-            CoordinatesTypeEntry coordinatesTypeEntry = getAny(needToBeChecked, boundary, borderPoints);
+            CoordinatesTypeEntry coordinatesTypeEntry = getAny(needToBeChecked, boundary, mainBorder, borderPoints);
 
             if (coordinatesTypeEntry.typeOfFilling == TypeOfFilling.HorizontalOnly) {
                 checkVertical(coordinatesTypeEntry, boundary, needToBeChecked, sourceColour, colour);
@@ -52,21 +48,22 @@ public class BatchSingleThreadFillArea implements IBatchFillArea {
         return borderPoints;
     }
 
-    protected CoordinatesTypeEntry getAny(List<CoordinatesTypeEntry> needToBeChecked, Boundary boundary, BorderPoints borderPoints) {
+    protected CoordinatesTypeEntry getAny(List<CoordinatesTypeEntry> needToBeChecked, Boundary boundary, Boundary mainBorder, BorderPoints borderPoints) {
         CoordinatesTypeEntry value = needToBeChecked.remove(needToBeChecked.size() - 1);
 
-        if (value.x == boundary.minWidth) {
-            borderPoints.left.add((value.y - 1) * model.getWidth() + value.x);
+        if (value.x == boundary.minWidth && mainBorder.checkInBound(value.x - 1, value.y)) {
+            borderPoints.left.add(new CoordinatesTypeEntry(value.x - 1, value.y));
         }
-        if (value.x == boundary.maxWidth) {
-            borderPoints.right.add((value.y + 1) * model.getWidth() + value.x);
+        if (value.x == boundary.maxWidth && mainBorder.checkInBound(value.x + 1, value.y)) {
+            borderPoints.right.add(new CoordinatesTypeEntry(value.x + 1, value.y));
         }
-        if (value.x == boundary.minHeight) {
-            borderPoints.top.add(value.y * model.getWidth() + value.x - 1);
+        if (value.y == boundary.minHeight && mainBorder.checkInBound(value.x, value.y - 1)) {
+            borderPoints.top.add(new CoordinatesTypeEntry(value.x, value.y - 1));
         }
-        if (value.x == boundary.maxHeight) {
-            borderPoints.bottom.add(value.y * model.getWidth() + value.x + 1);
+        if (value.y == boundary.maxHeight && mainBorder.checkInBound(value.x, value.y + 1)) {
+            borderPoints.bottom.add(new CoordinatesTypeEntry(value.x, value.y + 1));
         }
+
         return value;
     }
 
@@ -76,7 +73,7 @@ public class BatchSingleThreadFillArea implements IBatchFillArea {
             needToBeChecked.add(new CoordinatesTypeEntry(i, coordinatesTypeEntry.y, TypeOfFilling.HorizontalOnly));
         }
 
-        for (int i = coordinatesTypeEntry.x - 1; i > boundary.minWidth && model.get(i, coordinatesTypeEntry.y) == sourceColour; i--) {
+        for (int i = coordinatesTypeEntry.x - 1; i >= boundary.minWidth && model.get(i, coordinatesTypeEntry.y) == sourceColour; i--) {
             model.set(i, coordinatesTypeEntry.y, colour);
             needToBeChecked.add(new CoordinatesTypeEntry(i, coordinatesTypeEntry.y, TypeOfFilling.HorizontalOnly));
         }
@@ -88,7 +85,7 @@ public class BatchSingleThreadFillArea implements IBatchFillArea {
             needToBeChecked.add(new CoordinatesTypeEntry(coordinatesTypeEntry.x, j, TypeOfFilling.VerticalOnly));
         }
 
-        for (int j = coordinatesTypeEntry.y - 1; j > boundary.minHeight && model.get(coordinatesTypeEntry.x, j) == sourceColour; j--) {
+        for (int j = coordinatesTypeEntry.y - 1; j >= boundary.minHeight && model.get(coordinatesTypeEntry.x, j) == sourceColour; j--) {
             model.set(coordinatesTypeEntry.x, j, colour);
             needToBeChecked.add(new CoordinatesTypeEntry(coordinatesTypeEntry.x, j, TypeOfFilling.VerticalOnly));
         }

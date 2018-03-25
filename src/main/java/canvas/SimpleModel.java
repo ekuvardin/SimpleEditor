@@ -12,8 +12,8 @@ public class SimpleModel extends Model {
     private final int yLength;
 
     public SimpleModel(int x, int y) {
-        this.array = new char[x][y];
-        for (int i = 0; i < x; i++) {
+        this.array = new char[y][x];
+        for (int i = 0; i < y; i++) {
             Arrays.fill(array[i], ' ');
         }
 
@@ -23,12 +23,12 @@ public class SimpleModel extends Model {
 
     @Override
     public void set(int x, int y, char value) {
-        array[x - 1][y - 1] = value;
+        array[y - 1][x - 1] = value;
     }
 
     @Override
     public char get(int x, int y) {
-        return array[x - 1][y - 1];
+        return array[y - 1][x - 1];
     }
 
     @Override

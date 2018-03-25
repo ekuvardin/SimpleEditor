@@ -67,9 +67,9 @@ public class SimpleOptionParserTests {
 
         ICommand command = simpleOptionParser.parseCommand(args);
         Assert.assertNotNull(command);
-        Assert.assertTrue(command instanceof FillConcurrentAreaCommand);
+        Assert.assertTrue(command instanceof FillParallelAreaCommand);
 
-        FillConcurrentAreaCommand fill = (FillConcurrentAreaCommand) command;
+        FillParallelAreaCommand fill = (FillParallelAreaCommand) command;
 
         Assert.assertEquals(1,fill.getX());
         Assert.assertEquals(2, fill.getY());
@@ -86,20 +86,6 @@ public class SimpleOptionParserTests {
         Assert.assertTrue(command instanceof CreateCanvasCommand);
 
         CreateCanvasCommand canvas = (CreateCanvasCommand) command;
-
-        Assert.assertEquals(20,canvas.getWidth());
-        Assert.assertEquals(2, canvas.getHeight());
-    }
-
-    @Test
-    public void SimpleOptionParserShouldReturnCreateConcurrentCanvasCommand(){
-        args = new String[] {"CN", "20", "2"};
-
-        ICommand command = simpleOptionParser.parseCommand(args);
-        Assert.assertNotNull(command);
-        Assert.assertTrue(command instanceof CreateConcurrentCanvasCommand);
-
-        CreateConcurrentCanvasCommand canvas = (CreateConcurrentCanvasCommand) command;
 
         Assert.assertEquals(20,canvas.getWidth());
         Assert.assertEquals(2, canvas.getHeight());
