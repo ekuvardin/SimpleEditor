@@ -4,7 +4,6 @@ import canvas.Boundary;
 import canvas.Model;
 import canvas.viewer.IView;
 
-import java.util.Iterator;
 import java.util.List;
 import java.util.concurrent.*;
 
@@ -94,7 +93,9 @@ public class ParallelBatchFillArea implements IFillArea {
             Boundary boundary = getBlockBorder(value.x, value.y);
             try {
                 tryLock(boundary);
-                return fillArea.fill(startPoints, boundary, sourceColour, colour);
+                BorderPoints borderPoints = fillArea.fill(startPoints, boundary, sourceColour, colour);
+                reduceBorderPoints(borderPoints);
+                return borderPoints;
             } catch (InterruptedException e) {
                 view.showError(e);
                 throw new RuntimeException(e);
@@ -103,19 +104,38 @@ public class ParallelBatchFillArea implements IFillArea {
             }
         }
 
-        /*
         private void reduceBorderPoints(BorderPoints borderPoints) {
             MergeReducer parent = (MergeReducer) this.getCompleter();
-            if (Move.BOTTOM.equals(parent.move)) {
-                Iterator<CoordinatesTypeEntry> iter = borderPoints.top.iterator();
-                while (iter.hasNext()) {
-                    CoordinatesTypeEntry entry = iter.next();
+            Boundary mainBorder = model.getBoundary();
 
-                    iter.remove();
+            if (Move.BOTTOM.equals(parent.move)) {
+                for(CoordinatesTypeEntry entry : startPoints){
+                    entry.y = entry.y - mainBorder.getMaxHeight();
+                    borderPoints.top.remove(entry);
                 }
             }
 
-        }*/
+            if (Move.TOP.equals(parent.move)) {
+                for(CoordinatesTypeEntry entry : startPoints){
+                    entry.y = entry.y + mainBorder.getMaxHeight();
+                    borderPoints.bottom.remove(entry);
+                }
+            }
+
+            if (Move.LEFT.equals(parent.move)) {
+                for(CoordinatesTypeEntry entry : startPoints){
+                    entry.x = entry.x - mainBorder.getMaxWidth();
+                    borderPoints.left.remove(entry);
+                }
+            }
+
+            if (Move.RIGHT.equals(parent.move)) {
+                for(CoordinatesTypeEntry entry : startPoints){
+                    entry.y = entry.x + mainBorder.getMaxWidth();
+                    borderPoints.right.remove(entry);
+                }
+            }
+        }
 
         @Override
         public void compute() {
