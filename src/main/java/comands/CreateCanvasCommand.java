@@ -1,7 +1,7 @@
 package comands;
 
 import canvas.SimpleModel;
-import canvas.Viewer.IView;
+import canvas.viewer.IView;
 
 /**
  * Create simple canvas

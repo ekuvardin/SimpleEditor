@@ -1,6 +1,6 @@
 package comands;
 
-import canvas.Viewer.IView;
+import canvas.viewer.IView;
 
 /*
    Last command before terminating

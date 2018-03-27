@@ -1,6 +1,6 @@
 package runner;
 
-import canvas.Viewer.ConsoleViewer;
+import canvas.viewer.ConsoleViewer;
 import comands.*;
 import parser.IConsoleParser;
 import parser.SimpleOptionParser;

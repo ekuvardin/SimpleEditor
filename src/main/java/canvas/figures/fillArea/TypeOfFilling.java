@@ -1,4 +1,4 @@
-package canvas.Figures.FillArea;
+package canvas.figures.fillArea;
 
 /**
  * Points can be but during horizontal/vertical/all direction scan

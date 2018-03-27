@@ -1,9 +1,9 @@
-package canvas.Figures.FillArea;
+package canvas.figures.fillArea;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class BorderPoints {
+class BorderPoints {
     List<CoordinatesTypeEntry> left = new ArrayList<>();
     List<CoordinatesTypeEntry> right = new ArrayList<>();
     List<CoordinatesTypeEntry> bottom = new ArrayList<>();

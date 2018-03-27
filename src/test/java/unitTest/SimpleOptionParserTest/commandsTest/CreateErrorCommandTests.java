@@ -1,6 +1,6 @@
 package unitTest.SimpleOptionParserTest.commandsTest;
 
-import canvas.Viewer.IView;
+import canvas.viewer.IView;
 import comands.ErrorCommand;
 import comands.ICommand;
 import org.junit.Assert;

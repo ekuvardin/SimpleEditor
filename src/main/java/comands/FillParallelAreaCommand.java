@@ -1,11 +1,10 @@
 package comands;
 
-import canvas.Figures.FillArea.BatchSingleThreadFillArea;
-import canvas.Figures.FillArea.Boundary;
-import canvas.Figures.FillArea.IFillArea;
-import canvas.Figures.FillArea.ParallelBatchFillArea;
+import canvas.figures.fillArea.BatchSingleThreadFillArea;
+import canvas.figures.fillArea.IFillArea;
+import canvas.figures.fillArea.ParallelBatchFillArea;
 import canvas.Model;
-import canvas.Viewer.IView;
+import canvas.viewer.IView;
 
 /*
   Fill area with several threads
@@ -27,7 +26,7 @@ public class FillParallelAreaCommand extends FillAreaCommand {
     public void execute(IView view) {
         Model model = Model.getCurrentModel();
         IFillArea fillArea = new ParallelBatchFillArea(view, model, threadCount, widthBatchSize, heightBatchSize, new BatchSingleThreadFillArea(model));
-        fillArea.fill(x, y, new Boundary(1, model.getWidth(), 1, model.getHeight()), colour);
+        fillArea.fill(x, y, colour);
         view.draw(model);
     }
 

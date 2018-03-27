@@ -1,10 +1,13 @@
 package FillArea;
 
-import canvas.Figures.FillArea.*;
 import canvas.Model;
 import canvas.SimpleModel;
-import canvas.Viewer.ConsoleViewer;
-import canvas.Viewer.IView;
+import canvas.figures.fillArea.BatchSingleThreadFillArea;
+import canvas.figures.fillArea.IFillArea;
+import canvas.figures.fillArea.ParallelBatchFillArea;
+import canvas.figures.fillArea.SingleThreadFillArea;
+import canvas.viewer.ConsoleViewer;
+import canvas.viewer.IView;
 import org.openjdk.jmh.annotations.*;
 import org.openjdk.jmh.runner.Runner;
 import org.openjdk.jmh.runner.RunnerException;
@@ -16,10 +19,9 @@ import java.util.concurrent.TimeUnit;
 
 
 /*
-
-Benchmark                                                  Mode  Cnt   Score   Error  Units
-FillArea.FillEmptyAreaBenchmark.MultipleThreadFilling.put  avgt    5   9,233 ± 3,001  ns/op
-FillArea.FillEmptyAreaBenchmark.SingleThreadFilling.put    avgt    5  15,580 ± 5,009  ns/op
+    Benchmark                                                  Mode  Cnt   Score   Error  Units
+    fillArea.FillEmptyAreaBenchmark.MultipleThreadFilling.put  avgt    5   9,233 ± 3,001  ns/op
+    fillArea.FillEmptyAreaBenchmark.SingleThreadFilling.put    avgt    5  15,580 ± 5,009  ns/op
  */
 public class FillEmptyAreaBenchmark {
 
@@ -46,7 +48,7 @@ public class FillEmptyAreaBenchmark {
 
         @Benchmark
         public void put() throws InterruptedException {
-            fillArea.fill(1, 1, new Boundary(1, width, 1, height), 'y');
+            fillArea.fill(1, 1, 'y');
         }
     }
 
@@ -71,7 +73,7 @@ public class FillEmptyAreaBenchmark {
 
         @Benchmark
         public void put() throws InterruptedException {
-            fillArea.fill(1, 1, new Boundary(1, width, 1, height), 'y');
+            fillArea.fill(1, 1, 'y');
         }
     }
 

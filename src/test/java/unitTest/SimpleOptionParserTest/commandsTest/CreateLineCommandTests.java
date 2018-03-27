@@ -2,7 +2,7 @@ package unitTest.SimpleOptionParserTest.commandsTest;
 
 import canvas.Model;
 import canvas.SimpleModel;
-import canvas.Viewer.IView;
+import canvas.viewer.IView;
 import comands.CreateLineCommand;
 import comands.ICommand;
 import org.junit.Assert;

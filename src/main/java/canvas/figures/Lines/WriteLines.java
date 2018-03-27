@@ -1,4 +1,4 @@
-package canvas.Figures.Lines;
+package canvas.figures.Lines;
 
 import canvas.Model;
 

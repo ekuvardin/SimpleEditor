@@ -10,6 +10,7 @@ public class SimpleModel extends Model {
     private char[][] array;
     private final int xLength;
     private final int yLength;
+    private Boundary boundary;
 
     public SimpleModel(int x, int y) {
         this.array = new char[y][x];
@@ -19,6 +20,7 @@ public class SimpleModel extends Model {
 
         xLength = x;
         yLength = y;
+        boundary = new Boundary(0, xLength, 0, yLength);
     }
 
     @Override
@@ -42,7 +44,8 @@ public class SimpleModel extends Model {
     }
 
     @Override
-    public boolean canBeParallelUsed() {
-        return false;
+    public Boundary getBoundary() {
+        return boundary;
     }
+
 }

@@ -1,7 +1,7 @@
 package unitTest.SimpleOptionParserTest.canvas.viewer;
 
 import canvas.Model;
-import canvas.Viewer.ConsoleViewer;
+import canvas.viewer.ConsoleViewer;
 import comands.ICommand;
 import org.junit.After;
 import org.junit.Assert;
@@ -15,10 +15,10 @@ import java.io.PrintStream;
 
 public class ConsoleViewerTests {
 
-    PrintStream oldOut;
-    PrintStream oldErr;
-    Model model;
-    ConsoleViewer view= new ConsoleViewer();;
+    private PrintStream oldOut;
+    private PrintStream oldErr;
+    private Model model;
+    private ConsoleViewer view = new ConsoleViewer();
 
     @Before
     public void preTest() {

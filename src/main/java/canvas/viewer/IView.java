@@ -1,4 +1,4 @@
-package canvas.Viewer;
+package canvas.viewer;
 
 import canvas.Model;
 

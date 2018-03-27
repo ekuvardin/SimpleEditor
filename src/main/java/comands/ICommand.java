@@ -1,6 +1,6 @@
 package comands;
 
-import canvas.Viewer.IView;
+import canvas.viewer.IView;
 
 /*
   Define command to interact with user

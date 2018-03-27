@@ -1,9 +1,9 @@
-package canvas.Figures.FillArea;
+package canvas.figures.fillArea;
 
 /**
  * Describe point to handling + in which direction it has already been handled
  */
-public class CoordinatesTypeEntry {
+class CoordinatesTypeEntry {
 
     TypeOfFilling typeOfFilling;
     int x;

@@ -1,8 +1,5 @@
 package intergrationTest.ConsoleViewTest;
 
-import canvas.Figures.FillArea.BatchSingleThreadFillArea;
-import canvas.Figures.FillArea.ParallelBatchFillArea;
-import canvas.SimpleModel;
 import comands.*;
 import org.junit.Test;
 

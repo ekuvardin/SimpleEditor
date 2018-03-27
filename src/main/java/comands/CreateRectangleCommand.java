@@ -1,8 +1,8 @@
 package comands;
 
 import canvas.Model;
-import canvas.Viewer.IView;
-import canvas.Figures.Lines.WriteLines;
+import canvas.viewer.IView;
+import canvas.figures.Lines.WriteLines;
 
 /**
  * Create rectangle command

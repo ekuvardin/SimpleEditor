@@ -2,12 +2,11 @@ package intergrationTest.ConsoleViewTest;
 
 import canvas.Model;
 import canvas.SimpleModel;
-import canvas.Viewer.ConsoleViewer;
+import canvas.viewer.ConsoleViewer;
 import comands.*;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
-import org.junit.Test;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -17,7 +16,7 @@ public abstract class CommonModelTests {
 
     PrintStream old;
     Model model;
-    ConsoleViewer view= new ConsoleViewer();;
+    ConsoleViewer view= new ConsoleViewer();
 
     @Before
     public void preTest() {

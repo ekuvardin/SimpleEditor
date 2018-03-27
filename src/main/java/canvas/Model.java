@@ -52,9 +52,5 @@ public abstract class Model {
         return currentModel;
     }
 
-    /**
-     * Is canvas can be access in parallel
-     * @return true - can be access parallel, false - other
-     */
-    public abstract boolean canBeParallelUsed();
+    public abstract Boundary getBoundary();
 }
