@@ -4,6 +4,7 @@ import canvas.Boundary;
 import canvas.Model;
 import canvas.viewer.IView;
 
+import java.util.Iterator;
 import java.util.List;
 import java.util.concurrent.*;
 
@@ -32,7 +33,7 @@ public class ParallelBatchFillArea implements IFillArea {
         if (model.get(x, y) != colour) {
             try {
 
-                MergeReducer mergeReducer = new MergeReducer(null, List.of(new CoordinatesTypeEntry(x, y)), model.get(x, y), colour);
+                MergeReducer mergeReducer = new MergeReducer(null, List.of(new CoordinatesTypeEntry(x, y)), model.get(x, y), colour, Move.FIRST);
                 new ForkJoinPool(threadCount).invoke(mergeReducer);
                 mergeReducer.get();
             } catch (InterruptedException | ExecutionException e) {
@@ -59,66 +60,88 @@ public class ParallelBatchFillArea implements IFillArea {
         }
     }
 
+    private enum Move {
+        TOP, BOTTOM, RIGHT, LEFT, FIRST
+    }
+
     class MergeReducer extends CountedCompleter<Void> {
 
         private List<CoordinatesTypeEntry> startPoints;
         private char colour;
         private char sourceColour;
+        private Move move;
 
-        private MergeReducer(CountedCompleter<Void> parent, List<CoordinatesTypeEntry> startPoints, char sourceColour, char colour) {
+        private MergeReducer(CountedCompleter<Void> parent, List<CoordinatesTypeEntry> startPoints, char sourceColour, char colour, Move move) {
             super(parent);
             this.startPoints = startPoints;
             this.colour = colour;
             this.sourceColour = sourceColour;
+            this.move = move;
         }
 
         private Boundary getBlockBorder(int x, int y) {
             int minWidth = (x - 1) / blockSizeW;
-            int minHeight = (y -1) / blockSizeH;
+            int minHeight = (y - 1) / blockSizeH;
             Boundary mainBorder = model.getBoundary();
-            return new Boundary(minWidth * blockSizeW+1,
+            return new Boundary(minWidth * blockSizeW + 1,
                     Math.min((minWidth + 1) * blockSizeW, mainBorder.getMaxWidth()),
-                    minHeight * blockSizeH+1,
+                    minHeight * blockSizeH + 1,
                     Math.min((minHeight + 1) * blockSizeH, mainBorder.getMaxHeight()));
         }
 
-        @Override
-        public void compute() {
+        private BorderPoints fillArea() {
             CoordinatesTypeEntry value = startPoints.get(0);
-
             Boundary boundary = getBlockBorder(value.x, value.y);
-            BorderPoints borderPoints;
             try {
                 tryLock(boundary);
-                borderPoints = fillArea.fill(startPoints, boundary, sourceColour, colour);
+                return fillArea.fill(startPoints, boundary, sourceColour, colour);
             } catch (InterruptedException e) {
                 view.showError(e);
                 throw new RuntimeException(e);
             } finally {
                 releaseLock(boundary);
             }
+        }
+
+        /*
+        private void reduceBorderPoints(BorderPoints borderPoints) {
+            MergeReducer parent = (MergeReducer) this.getCompleter();
+            if (Move.BOTTOM.equals(parent.move)) {
+                Iterator<CoordinatesTypeEntry> iter = borderPoints.top.iterator();
+                while (iter.hasNext()) {
+                    CoordinatesTypeEntry entry = iter.next();
+
+                    iter.remove();
+                }
+            }
+
+        }*/
+
+        @Override
+        public void compute() {
+            BorderPoints borderPoints = fillArea();
 
             if (borderPoints.bottom.size() != 0) {
                 this.addToPendingCount(1);
-                MergeReducer mapReducer = new MergeReducer(this, borderPoints.bottom, sourceColour, colour);
+                MergeReducer mapReducer = new MergeReducer(this, borderPoints.bottom, sourceColour, colour, Move.BOTTOM);
                 mapReducer.fork();
             }
 
             if (borderPoints.top.size() != 0) {
                 this.addToPendingCount(1);
-                MergeReducer mapReducer = new MergeReducer(this, borderPoints.top, sourceColour, colour);
+                MergeReducer mapReducer = new MergeReducer(this, borderPoints.top, sourceColour, colour, Move.TOP);
                 mapReducer.fork();
             }
 
             if (borderPoints.left.size() != 0) {
                 this.addToPendingCount(1);
-                MergeReducer mapReducer = new MergeReducer(this, borderPoints.left, sourceColour, colour);
+                MergeReducer mapReducer = new MergeReducer(this, borderPoints.left, sourceColour, colour, Move.LEFT);
                 mapReducer.fork();
             }
 
             if (borderPoints.right.size() != 0) {
                 this.addToPendingCount(1);
-                MergeReducer mapReducer = new MergeReducer(this, borderPoints.right, sourceColour, colour);
+                MergeReducer mapReducer = new MergeReducer(this, borderPoints.right, sourceColour, colour, Move.RIGHT);
                 mapReducer.fork();
             }
 

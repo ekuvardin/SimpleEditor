@@ -7,7 +7,7 @@ import java.io.IOException;
 
 public class ParallelFillAreaCommandTest extends CommonModelTests {
 
-    @Test(timeout = 10000000)
+    @Test(timeout = 10000)
     public void consoleShouldFillCanvasInConcurrentInOneThread() throws IOException {
         model = createCanvas(4, 4);
         CreateRectangleCommand createLineCommand = new CreateRectangleCommand(1, 1, 3, 3);

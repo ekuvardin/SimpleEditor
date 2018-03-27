@@ -14,7 +14,7 @@ import java.io.PrintStream;
 
 public abstract class CommonModelTests {
 
-    PrintStream old;
+    private PrintStream old;
     Model model;
     ConsoleViewer view= new ConsoleViewer();
 

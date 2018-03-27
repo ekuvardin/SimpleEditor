@@ -25,8 +25,8 @@ import java.util.concurrent.TimeUnit;
  */
 public class FillEmptyAreaBenchmark {
 
-    static int width = 1024;
-    static int height = 1024;
+    static int width = 2048;
+    static int height = 2048;
 
     @State(Scope.Benchmark)
     @BenchmarkMode(Mode.AverageTime)
@@ -41,17 +41,17 @@ public class FillEmptyAreaBenchmark {
         private IFillArea fillArea;
 
         @Setup(Level.Iteration)
-        public void preSetup() throws InterruptedException {
+        public void preSetup() {
             model = new SimpleModel(width, height);
             fillArea = new SingleThreadFillArea(model);
         }
 
         @Benchmark
-        public void put() throws InterruptedException {
+        public void put() {
             fillArea.fill(1, 1, 'y');
         }
     }
-
+/*
     @State(Scope.Benchmark)
     @BenchmarkMode(Mode.AverageTime)
     @OutputTimeUnit(TimeUnit.NANOSECONDS)
@@ -68,7 +68,7 @@ public class FillEmptyAreaBenchmark {
         @Setup(Level.Iteration)
         public void preSetup() throws InterruptedException {
             model = new SimpleModel(width, height);
-            fillArea = new ParallelBatchFillArea(view, model, 4, 64, 64, new BatchSingleThreadFillArea(model));
+            fillArea = new ParallelBatchFillArea(view, model, 1, 128, 128, new BatchSingleThreadFillArea(model));
         }
 
         @Benchmark
@@ -76,7 +76,7 @@ public class FillEmptyAreaBenchmark {
             fillArea.fill(1, 1, 'y');
         }
     }
-
+*/
     public static void main(String[] args) {
 
         Options opt = new OptionsBuilder()

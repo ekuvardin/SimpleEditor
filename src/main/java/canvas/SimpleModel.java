@@ -20,7 +20,7 @@ public class SimpleModel extends Model {
 
         xLength = x;
         yLength = y;
-        boundary = new Boundary(0, xLength, 0, yLength);
+        boundary = new Boundary(1, xLength, 1, yLength);
     }
 
     @Override
