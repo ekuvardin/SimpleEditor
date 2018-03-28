@@ -23,10 +23,10 @@ public class FillAreaCommand implements ICommand {
     @Override
     public void execute(IView view) {
         Model model = Model.getCurrentModel();
-        IFillArea fillArea = new SingleThreadFillArea(Model.getCurrentModel());
+        IFillArea fillArea = new SingleThreadFillArea(model);
         fillArea.fill(x, y, colour);
 
-        view.draw(Model.getCurrentModel());
+        view.draw(model);
     }
 
     @Override

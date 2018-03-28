@@ -27,7 +27,7 @@ public class FillEmptyAreaBenchmark {
 
     static int width = 2048;
     static int height = 2048;
-
+/*
     @State(Scope.Benchmark)
     @BenchmarkMode(Mode.AverageTime)
     @OutputTimeUnit(TimeUnit.NANOSECONDS)
@@ -39,44 +39,57 @@ public class FillEmptyAreaBenchmark {
 
         private Model model;
         private IFillArea fillArea;
+        private char colour = 'a';
 
-        @Setup(Level.Iteration)
-        public void preSetup() {
+        @Setup(Level.Trial)
+        public void benchSetup() {
             model = new SimpleModel(width, height);
             fillArea = new SingleThreadFillArea(model);
         }
 
+        @Setup(Level.Iteration)
+        public void preSetup() {
+            colour += 1;
+        }
+
         @Benchmark
         public void put() {
-            fillArea.fill(1, 1, 'y');
-        }
-    }
-/*
-    @State(Scope.Benchmark)
-    @BenchmarkMode(Mode.AverageTime)
-    @OutputTimeUnit(TimeUnit.NANOSECONDS)
-    @Warmup(iterations = 4)
-    @Measurement(iterations = 5)
-    @Timeout(time = 3)
-    @Fork(1)
-    public static class MultipleThreadFilling {
-
-        private Model model;
-        private IFillArea fillArea;
-        private IView view = new ConsoleViewer();
-
-        @Setup(Level.Iteration)
-        public void preSetup() throws InterruptedException {
-            model = new SimpleModel(width, height);
-            fillArea = new ParallelBatchFillArea(view, model, 1, 128, 128, new BatchSingleThreadFillArea(model));
-        }
-
-        @Benchmark
-        public void put() throws InterruptedException {
-            fillArea.fill(1, 1, 'y');
+            fillArea.fill(1, 1, colour);
         }
     }
 */
+
+        @State(Scope.Benchmark)
+        @BenchmarkMode(Mode.AverageTime)
+        @OutputTimeUnit(TimeUnit.NANOSECONDS)
+        @Warmup(iterations = 4)
+        @Measurement(iterations = 5)
+        @Timeout(time = 3)
+        @Fork(1)
+        public static class MultipleThreadFilling {
+
+            private Model model;
+            private IFillArea fillArea;
+            private char colour = 'a';
+            private IView view = new ConsoleViewer();
+
+            @Setup(Level.Trial)
+            public void benchSetup() {
+                model = new SimpleModel(width, height);
+                fillArea = new ParallelBatchFillArea(view, model, 4, 128, 128, new BatchSingleThreadFillArea(model));
+            }
+
+            @Setup(Level.Iteration)
+            public void preSetup() {
+                colour += 1;
+            }
+
+            @Benchmark
+            public void put() throws InterruptedException {
+                fillArea.fill(1, 1, colour);
+            }
+        }
+
     public static void main(String[] args) {
 
         Options opt = new OptionsBuilder()

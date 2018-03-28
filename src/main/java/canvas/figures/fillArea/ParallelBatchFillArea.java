@@ -32,7 +32,7 @@ public class ParallelBatchFillArea implements IFillArea {
         if (model.get(x, y) != colour) {
             try {
 
-                MergeReducer mergeReducer = new MergeReducer(null, List.of(new CoordinatesTypeEntry(x, y)), model.get(x, y), colour, Move.FIRST);
+                MergeReducer mergeReducer = new MergeReducer(null, List.of(new CoordinatesTypeEntry(x, y)), model.get(x, y), colour, Move.NONE);
                 new ForkJoinPool(threadCount).invoke(mergeReducer);
                 mergeReducer.get();
             } catch (InterruptedException | ExecutionException e) {
@@ -60,22 +60,22 @@ public class ParallelBatchFillArea implements IFillArea {
     }
 
     private enum Move {
-        TOP, BOTTOM, RIGHT, LEFT, FIRST
+        TOP, BOTTOM, RIGHT, LEFT, NONE
     }
 
     class MergeReducer extends CountedCompleter<Void> {
 
-        private List<CoordinatesTypeEntry> startPoints;
-        private char colour;
-        private char sourceColour;
-        private Move move;
+        private final List<CoordinatesTypeEntry> startPoints;
+        private final char colour;
+        private final char sourceColour;
+        private final Move parentDirection;
 
-        private MergeReducer(CountedCompleter<Void> parent, List<CoordinatesTypeEntry> startPoints, char sourceColour, char colour, Move move) {
+        private MergeReducer(CountedCompleter<Void> parent, List<CoordinatesTypeEntry> startPoints, char sourceColour, char colour, Move parentDirection) {
             super(parent);
             this.startPoints = startPoints;
             this.colour = colour;
             this.sourceColour = sourceColour;
-            this.move = move;
+            this.parentDirection = parentDirection;
         }
 
         private Boundary getBlockBorder(int x, int y) {
@@ -105,35 +105,33 @@ public class ParallelBatchFillArea implements IFillArea {
         }
 
         private void reduceBorderPoints(BorderPoints borderPoints) {
-            MergeReducer parent = (MergeReducer) this.getCompleter();
-            Boundary mainBorder = model.getBoundary();
-
-            if (Move.BOTTOM.equals(parent.move)) {
-                for(CoordinatesTypeEntry entry : startPoints){
-                    entry.y = entry.y - mainBorder.getMaxHeight();
-                    borderPoints.top.remove(entry);
-                }
-            }
-
-            if (Move.TOP.equals(parent.move)) {
-                for(CoordinatesTypeEntry entry : startPoints){
-                    entry.y = entry.y + mainBorder.getMaxHeight();
-                    borderPoints.bottom.remove(entry);
-                }
-            }
-
-            if (Move.LEFT.equals(parent.move)) {
-                for(CoordinatesTypeEntry entry : startPoints){
-                    entry.x = entry.x - mainBorder.getMaxWidth();
-                    borderPoints.left.remove(entry);
-                }
-            }
-
-            if (Move.RIGHT.equals(parent.move)) {
-                for(CoordinatesTypeEntry entry : startPoints){
-                    entry.y = entry.x + mainBorder.getMaxWidth();
-                    borderPoints.right.remove(entry);
-                }
+            switch (this.parentDirection) {
+                case BOTTOM:
+                    for (CoordinatesTypeEntry entry : startPoints) {
+                        entry.y++;
+                        borderPoints.bottom.remove(entry);
+                    }
+                    break;
+                case TOP:
+                    for (CoordinatesTypeEntry entry : startPoints) {
+                        entry.y--;
+                        borderPoints.top.remove(entry);
+                    }
+                    break;
+                case LEFT:
+                    for (CoordinatesTypeEntry entry : startPoints) {
+                        entry.x--;
+                        borderPoints.left.remove(entry);
+                    }
+                    break;
+                case RIGHT:
+                    for (CoordinatesTypeEntry entry : startPoints) {
+                        entry.x++;
+                        borderPoints.right.remove(entry);
+                    }
+                    break;
+                default:
+                    break;
             }
         }
 
@@ -143,25 +141,25 @@ public class ParallelBatchFillArea implements IFillArea {
 
             if (borderPoints.bottom.size() != 0) {
                 this.addToPendingCount(1);
-                MergeReducer mapReducer = new MergeReducer(this, borderPoints.bottom, sourceColour, colour, Move.BOTTOM);
+                MergeReducer mapReducer = new MergeReducer(this, borderPoints.bottom, sourceColour, colour, Move.TOP);
                 mapReducer.fork();
             }
 
             if (borderPoints.top.size() != 0) {
                 this.addToPendingCount(1);
-                MergeReducer mapReducer = new MergeReducer(this, borderPoints.top, sourceColour, colour, Move.TOP);
+                MergeReducer mapReducer = new MergeReducer(this, borderPoints.top, sourceColour, colour, Move.BOTTOM);
                 mapReducer.fork();
             }
 
             if (borderPoints.left.size() != 0) {
                 this.addToPendingCount(1);
-                MergeReducer mapReducer = new MergeReducer(this, borderPoints.left, sourceColour, colour, Move.LEFT);
+                MergeReducer mapReducer = new MergeReducer(this, borderPoints.left, sourceColour, colour, Move.RIGHT);
                 mapReducer.fork();
             }
 
             if (borderPoints.right.size() != 0) {
                 this.addToPendingCount(1);
-                MergeReducer mapReducer = new MergeReducer(this, borderPoints.right, sourceColour, colour, Move.RIGHT);
+                MergeReducer mapReducer = new MergeReducer(this, borderPoints.right, sourceColour, colour, Move.LEFT);
                 mapReducer.fork();
             }
 

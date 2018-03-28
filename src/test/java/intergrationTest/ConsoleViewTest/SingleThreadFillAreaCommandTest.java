@@ -1,5 +1,8 @@
 package intergrationTest.ConsoleViewTest;
 
+import canvas.SimpleModel;
+import canvas.figures.fillArea.IFillArea;
+import canvas.figures.fillArea.SingleThreadFillArea;
 import comands.*;
 import org.junit.Test;
 
@@ -214,9 +217,10 @@ public class SingleThreadFillAreaCommandTest extends CommonModelTests {
 
     @Test
     public void consoleShouldFillCanvas2() throws IOException {
-        model = createCanvas(256, 256);
-        ICommand command = new FillAreaCommand(1, 1, 'y');
+        model = new SimpleModel(512, 512);
+        IFillArea fillArea = new SingleThreadFillArea(model);
+        fillArea.fill(1, 1, 'y');
         // fillArea = new ParallelBatchFillArea(view, model, 1,256,256,  new BatchSingleThreadFillArea(model));
-        command.execute(view);
+        view.draw(model);
     }
 }
