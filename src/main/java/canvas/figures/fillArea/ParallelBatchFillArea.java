@@ -31,7 +31,6 @@ public class ParallelBatchFillArea implements IFillArea {
     public void fill(int x, int y, char colour) {
         if (model.get(x, y) != colour) {
             try {
-
                 MergeReducer mergeReducer = new MergeReducer(null, List.of(new CoordinatesTypeEntry(x, y)), model.get(x, y), colour, Move.NONE);
                 new ForkJoinPool(threadCount).invoke(mergeReducer);
                 mergeReducer.get();
