@@ -6,7 +6,7 @@ import canvas.Model;
 import java.util.*;
 
 /**
- * Fill area
+ * Fill area in single thread
  */
 public class SingleThreadFillArea implements IFillArea {
 

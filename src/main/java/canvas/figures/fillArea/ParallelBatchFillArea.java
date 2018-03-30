@@ -7,6 +7,9 @@ import canvas.viewer.IView;
 import java.util.List;
 import java.util.concurrent.*;
 
+/**
+ * Fill area in several threads
+ */
 public class ParallelBatchFillArea implements IFillArea {
 
     private Model model;
@@ -62,6 +65,9 @@ public class ParallelBatchFillArea implements IFillArea {
         TOP, BOTTOM, RIGHT, LEFT, NONE
     }
 
+    /**
+     * Reducer filling area
+     */
     class MergeReducer extends CountedCompleter<Void> {
 
         private final List<CoordinatesTypeEntry> startPoints;

@@ -62,22 +62,6 @@ public class SimpleOptionParserTests {
     }
 
     @Test
-    public void SimpleOptionParserShouldReturnFillConcurrentAreaCommand(){
-        args = new String[] {"BN", "1", "2", "x", "4"};
-
-        ICommand command = simpleOptionParser.parseCommand(args);
-        Assert.assertNotNull(command);
-        Assert.assertTrue(command instanceof FillParallelAreaCommand);
-
-        FillParallelAreaCommand fill = (FillParallelAreaCommand) command;
-
-        Assert.assertEquals(1,fill.getX());
-        Assert.assertEquals(2, fill.getY());
-        Assert.assertEquals('x', fill.getColour());
-        Assert.assertEquals(4, fill.getThreadCount());
-    }
-
-    @Test
     public void SimpleOptionParserShouldReturnCreateCanvasCommand(){
         args = new String[] {"C", "20", "2"};
 

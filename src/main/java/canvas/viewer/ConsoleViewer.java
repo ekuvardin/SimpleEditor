@@ -4,6 +4,9 @@ import canvas.Model;
 
 import java.util.Arrays;
 
+/**
+ * Simple console viewer
+ */
 public class ConsoleViewer implements IView {
 
     @Override

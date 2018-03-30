@@ -3,7 +3,7 @@ package canvas;
 import java.util.Arrays;
 
 /**
- * Simple canvas to store point
+ * Simple model to store point
  */
 public class SimpleModel extends Model {
 

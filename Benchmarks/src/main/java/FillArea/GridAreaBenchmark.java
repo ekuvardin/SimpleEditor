@@ -117,11 +117,11 @@ public class GridAreaBenchmark {
         Options opt = new OptionsBuilder()
                 .include(GridAreaBenchmark.class.getSimpleName())
                 .warmupIterations(4)
-                .measurementIterations(8)
+                .measurementIterations(5)
                 .forks(1)
                 .timeout(TimeValue.seconds(60))
                 .jvmArgs("-ea")
-                  .addProfiler(GCProfiler.class)
+                //  .addProfiler(GCProfiler.class)
                 .build();
         try {
             new Runner(opt).run();

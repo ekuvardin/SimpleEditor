@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Fill area
+ * Fill area and pass points that need to be checked into neighbors areas
  */
 public class BatchSingleThreadFillArea implements IBatchFillArea {
 
@@ -50,7 +50,7 @@ public class BatchSingleThreadFillArea implements IBatchFillArea {
         return borderPoints;
     }
 
-    protected CoordinatesTypeEntry getAny(List<CoordinatesTypeEntry> needToBeChecked, Boundary boundary, Boundary mainBorder, BorderPoints borderPoints) {
+    private CoordinatesTypeEntry getAny(List<CoordinatesTypeEntry> needToBeChecked, Boundary boundary, Boundary mainBorder, BorderPoints borderPoints) {
         CoordinatesTypeEntry value = needToBeChecked.remove(needToBeChecked.size() - 1);
 
         if (value.x == boundary.getMinWidth() && mainBorder.checkInBound(value.x - 1, value.y)) {

@@ -214,13 +214,4 @@ public class SingleThreadFillAreaCommandTest extends CommonModelTests {
 
         checkResult(command, expected);
     }
-
-    @Test
-    public void consoleShouldFillCanvas2() throws IOException {
-        model = new SimpleModel(512, 512);
-        IFillArea fillArea = new SingleThreadFillArea(model);
-        fillArea.fill(1, 1, 'y');
-        // fillArea = new ParallelBatchFillArea(view, model, 1,256,256,  new BatchSingleThreadFillArea(model));
-        view.draw(model);
-    }
 }
